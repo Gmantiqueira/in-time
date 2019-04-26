@@ -15,7 +15,7 @@ class Nav extends Component {
                     <img src={UserIcon} alt="User" />
                 </Link>
 
-                <Link>
+                <Link to="/session">
                     <img src={StopwatchIcon} alt="Stopwatch" />
                 </Link>
 
