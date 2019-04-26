@@ -1,11 +1,14 @@
 export const Types = {
-    START: "timer/START",
-    PAUSE: "timer/PAUSE"
+    START: "timer/START"
 };
 
 const INITIAL_STATE = {
-    currentTime: null,
-    isRunning: false
+    currentTime: "",
+    totalTime: "",
+    aboveHalfTime: true,
+    isRunning: false,
+    circleSection: null,
+    barProgress: 100
 };
 
 export default function timer(state = INITIAL_STATE, action) {

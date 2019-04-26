@@ -1,57 +1,121 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Creators as TimerConfigActions } from "../../store/ducks/timerConfig";
 
 import { Container, Profile, FormList, FormRow } from "./styles";
 
 import Nav from "../../components/Nav";
 
 import Photo from "../../assets/images/photo.jpg";
-import UserIcon from "../../assets/images/user.png";
-import StopwatchIcon from "../../assets/images/stopwatch.png";
-import RefreshIcon from "../../assets/images/refresh.png";
 
-const User = () => (
-    <Container>
-        <Profile>
-            <div>
-                <img src={Photo} alt="Profile" />
-            </div>
-            <h4>Gmantiqueira</h4>
-            <p>gmantiqueira@gmail.com</p>
-        </Profile>
+class User extends Component {
+    static propTypes = {
+        config: PropTypes.func.isRequired,
+        timerConfig: PropTypes.shape({
+            color: PropTypes.string,
+            sessionName: PropTypes.string,
+            orientation: PropTypes.string
+        }).isRequired
+    };
 
-        <FormList>
-            <span id="time" style={{ color: "#fff" }} />
-            <FormRow>
-                <label>Team highlight color</label>
+    state = {
+        color: "",
+        orientation: "",
+        sessionName: ""
+    };
 
-                <button onClick="" />
-            </FormRow>
+    handleColorConfig = e => {
+        this.setState({
+            color: e.target.value
+        });
 
-            <FormRow>
-                <label>in.time/</label>
+        this.props.config(this.state.color);
+    };
 
-                <input type="text" readonly value="session" />
-            </FormRow>
+    handleSessionConfig = e => {
+        this.setState({
+            sessionName: e.target.value
+        });
 
-            <FormRow>
-                <label>Visual timer</label>
+        this.props.config(this.state.sessionName);
+    };
 
-                <div>
-                    <p>vertical</p>
-                    <p>circular</p>
-                </div>
-            </FormRow>
+    handleOrientationConfig = e => {
+        this.setState({
+            orientation: e.target.value
+        });
 
-            <FormRow>
-                <label>Password required</label>
+        this.props.config(this.state.orientation);
+    };
 
-                <input type="checkbox" />
-            </FormRow>
-        </FormList>
+    render() {
+        return (
+            <Container>
+                <Profile>
+                    <div>
+                        <img src={Photo} alt="Profile" />
+                    </div>
+                    <h4>Gmantiqueira</h4>
+                    <p>gmantiqueira@gmail.com</p>
+                </Profile>
 
-        <Nav />
-    </Container>
-);
+                <FormList>
+                    <span id="time" style={{ color: "#fff" }} />
+                    <FormRow>
+                        <label>Team highlight color</label>
 
-export default User;
+                        <input
+                            type="color"
+                            value={this.state.color}
+                            onChange={this.handleColorConfig}
+                        />
+                    </FormRow>
+
+                    <FormRow>
+                        <label>in.time/</label>
+
+                        <input
+                            type="text"
+                            value={this.state.sessionName}
+                            onChange={this.handleSessionConfig}
+                        />
+                    </FormRow>
+
+                    <FormRow>
+                        <label>Visual timer</label>
+
+                        <div>
+                            <p>vertical</p>
+                            <p>circular</p>
+                        </div>
+                    </FormRow>
+
+                    <FormRow>
+                        <label>Password required</label>
+
+                        <input type="checkbox" />
+                    </FormRow>
+                </FormList>
+
+                <Nav />
+            </Container>
+        );
+    }
+}
+
+const mapStateToProps = state => ({
+    currentTime: state.currentTime,
+    color: state.color,
+    orientation: state.orientation
+});
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(TimerConfigActions, dispatch);
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(User);
