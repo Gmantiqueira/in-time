@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -17,7 +18,7 @@ class Session extends Component {
         isRunning: false,
         circleSection: null,
         barProgress: 100,
-        orientation: "circular"
+        orientation: "vertical"
     };
 
     handleStartTimer = e => {
@@ -87,21 +88,29 @@ class Session extends Component {
                 <Nav />
             </Container>
         ) : (
-            <Timer
-                orientation={this.state.orientation}
-                circleSection={this.state.circleSection}
-                barProgress={this.state.barProgress}
-                aboveHalfTime={this.state.aboveHalfTime}
-                currentTime={this.state.currentTime}
-                totalTime={this.state.totalTime}
-            />
+            <Container>
+                <Timer
+                    orientation={this.state.orientation}
+                    circleSection={this.state.circleSection}
+                    barProgress={this.state.barProgress}
+                    aboveHalfTime={this.state.aboveHalfTime}
+                    currentTime={this.state.currentTime}
+                    totalTime={this.state.totalTime}
+                />
+                <Nav />
+            </Container>
         );
     }
 }
 
 const mapStateToProps = state => ({
     currentTime: state.currentTime,
-    isRunning: state.isRunning
+    isRunning: state.isRunning,
+    totalTime: state.totalTime,
+    aboveHalfTime: state.aboveHalfTime,
+    circleSection: state.circleSection,
+    barProgress: state.barProgress,
+    orientation: state.orientation
 });
 
 const mapDispatchToProps = dispatch =>
