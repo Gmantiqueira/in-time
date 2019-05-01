@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Creators as TimerConfigActions } from "../../store/ducks/timerConfig";
+import { Creators as TimerActions } from "../../store/ducks/timer";
 
 import { Container, Profile, FormList, FormRow } from "./styles";
 
@@ -13,42 +13,96 @@ import Photo from "../../assets/images/photo.jpg";
 
 class User extends Component {
     static propTypes = {
-        config: PropTypes.func.isRequired,
-        timerConfig: PropTypes.shape({
-            color: PropTypes.string,
-            sessionName: PropTypes.string,
-            orientation: PropTypes.string
-        }).isRequired
+        timer: PropTypes.shape({
+            primaryColor: PropTypes.string,
+            secondaryColor: PropTypes.string
+        }).isRequired,
+        changePrimary: PropTypes.func.isRequired,
+        changeSecondary: PropTypes.func.isRequired,
+        changeSession: PropTypes.func.isRequired,
+        changeOrientation: PropTypes.func.isRequired
+    };
+
+    toSecondaryColor = hex => {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+        var r = parseInt(result[1], 16);
+        var g = parseInt(result[2], 16);
+        var b = parseInt(result[3], 16);
+
+        var max = Math.max(r, g, b),
+            min = Math.min(r, g, b);
+
+        var h = (max + min) / 2;
+
+        if (max === min) {
+            h = 0; // achromatic
+        } else {
+            var d = max - min;
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+                default:
+                    return false;
+            }
+            h /= 6;
+        }
+
+        h = Math.round(360 * h);
+
+        var colorInHSL = "hsl(" + h + ", 20%, 20%)";
+
+        return colorInHSL;
     };
 
     state = {
-        color: "",
-        orientation: "",
+        primaryColor: "#f71963",
+        secondaryColor: "hsl(340, 20%, 20%)",
+        orientation: "vertical",
         sessionName: ""
     };
 
     handleColorConfig = e => {
+        e.preventDefault();
+
+        console.log(this);
+
         this.setState({
-            color: e.target.value
+            primaryColor: e.target.value
+        });
+        this.setState({
+            secondaryColor: this.toSecondaryColor(this.state.primaryColor)
         });
 
-        this.props.config(this.state.color);
+        this.props.changePrimary(this.state.primaryColor);
+        this.props.changeSecondary(this.state.secondaryColor);
     };
 
     handleSessionConfig = e => {
+        e.preventDefault();
+
+        this.props.changeSession(this.state.sessionName);
+
         this.setState({
             sessionName: e.target.value
         });
-
-        this.props.config(this.state.sessionName);
     };
 
     handleOrientationConfig = e => {
+        e.preventDefault();
+
         this.setState({
             orientation: e.target.value
         });
 
-        this.props.config(this.state.orientation);
+        this.props.changeOrientation(this.state.orientation);
     };
 
     render() {
@@ -63,13 +117,12 @@ class User extends Component {
                 </Profile>
 
                 <FormList>
-                    <span id="time" style={{ color: "#fff" }} />
                     <FormRow>
                         <label>Team highlight color</label>
-
                         <input
+                            id="color"
                             type="color"
-                            value={this.state.color}
+                            value="#fdffff"
                             onChange={this.handleColorConfig}
                         />
                     </FormRow>
@@ -88,8 +141,19 @@ class User extends Component {
                         <label>Visual timer</label>
 
                         <div>
-                            <p>vertical</p>
-                            <p>circular</p>
+                            <button
+                                value="vertical"
+                                onClick={this.handleOrientationConfig}
+                            >
+                                vertical
+                            </button>
+
+                            <button
+                                value="horizontal"
+                                onClick={this.handleOrientationConfig}
+                            >
+                                circular
+                            </button>
                         </div>
                     </FormRow>
 
@@ -107,13 +171,11 @@ class User extends Component {
 }
 
 const mapStateToProps = state => ({
-    currentTime: state.currentTime,
-    color: state.color,
-    orientation: state.orientation
+    timer: state.timer
 });
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(TimerConfigActions, dispatch);
+    bindActionCreators(TimerActions, dispatch);
 
 export default connect(
     mapStateToProps,
