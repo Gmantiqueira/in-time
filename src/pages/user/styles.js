@@ -1,8 +1,13 @@
 import styled from "styled-components";
-import * as palette from "../../styles/colors";
+import store from "../../store";
+
+var palette = {
+    primaryColor: store.getState().timer.primaryColor,
+    secondaryColor: store.getState().timer.secondaryColor
+};
 
 export const Container = styled.div`
-    background: ${palette.secondaryColor};
+    background: ${palette.primaryColor};
 
     max-height: 100%;
     width: 100%;
@@ -88,19 +93,31 @@ export const FormRow = styled.form`
     div {
         display: flex;
         justify-content: space-between;
-        p {
-            margin-left: 24px;
+        button {
+            background: none;
+            outline: none;
+            border: none;
 
+            margin-left: 24px;
             font-weight: 450;
             font-size: 14px;
             line-height: 20px;
             text-align: right;
-            opacity: 0.5;
+            opacity: .5;
             text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
+
+            &:first-of-type{
+                opacity: ${props =>
+                    props.orientation === "vertical" ? 1 : 0.5};
+            }
+            &:last-of-type{
+                opacity: ${props =>
+                    props.orientation === "circular" ? 1 : 0.5};
+            }
         }
     }
 
-    button {
+    input[type=color] {
         background: ${palette.primaryColor};
         border: 0;
         border-radius: 3px;

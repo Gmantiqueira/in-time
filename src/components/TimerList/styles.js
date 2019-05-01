@@ -1,5 +1,10 @@
 import styled from "styled-components";
-import * as palette from "../../styles/colors";
+import store from "../../store";
+
+var palette = {
+    primaryColor: store.getState().timer.primaryColor,
+    secondaryColor: store.getState().timer.secondaryColor
+};
 
 export const Wrapper = styled.div`
     display: flex;
