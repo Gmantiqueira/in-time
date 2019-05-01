@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -11,9 +10,11 @@ import TimerList from "../../components/TimerList";
 import Nav from "../../components/Nav";
 
 class Session extends Component {
+    static propTypes = {};
+
     state = {
-        currentTime: "",
-        totalTime: "",
+        currentTime: null,
+        totalTime: 0,
         aboveHalfTime: true,
         isRunning: false,
         circleSection: null,
@@ -24,15 +25,20 @@ class Session extends Component {
     handleStartTimer = e => {
         let time = e.target.value * 60;
         let totalTime = e.target.value * 60;
-        this.setState({ totalTime: totalTime });
+        this.setState({ totalTime: e.target.value * 60 });
+        this.props.setTotalTime(e.target.value * 60);
 
-        if (this.state.isRunning === false) {
-            var interval = setInterval(() => {
+        this.props.setTimer(
+            setInterval(() => {
                 time--;
-                var aboveHalfTime;
+
+                let aboveHalfTime;
+
+                this.setState({ isRunning: true });
+                this.props.is_Running(this.state.isRunning);
 
                 if (this.state.orientation === "circular") {
-                    var circleSection;
+                    let circleSection;
                     if (time >= totalTime / 2) {
                         aboveHalfTime = true;
                         circleSection = 90 - (180 / (totalTime / 2)) * time;
@@ -45,40 +51,39 @@ class Session extends Component {
                         circleSection: circleSection,
                         aboveHalfTime: aboveHalfTime
                     });
+                    this.props.isAboveHalf(this.state.aboveHalfTime);
+                    this.props.setCircleStyle(this.state.circleSection);
                 }
 
                 if (this.state.orientation === "vertical") {
-                    var barProgress;
+                    let barProgress;
                     barProgress = (100 * time) / totalTime + "%";
                     this.setState({
                         barProgress: barProgress
                     });
+                    this.props.setBarStyle(this.state.barProgress);
                 }
 
-                var minutes = Math.floor((time % (60 * 60)) / 60);
-                var seconds = Math.floor(time % 60);
+                let minutes = Math.floor((time % (60 * 60)) / 60);
+                let seconds = Math.floor(time % 60);
 
                 if (seconds < 10) {
                     seconds = "0" + seconds;
                 }
-                var format = minutes + ":" + seconds;
+                let format = minutes + ":" + seconds;
 
                 this.setState({
-                    isRunning: true,
                     currentTime: format
                 });
+                this.props.setCurrentTime(this.state.currentTime);
 
                 if (time === 0) {
                     format = "0:00";
-                    clearInterval(interval);
+                    clearInterval(this);
                     this.setState({ isRunning: false });
                 }
-            }, 1000);
-        }
-
-        if (this.state.isRunning === true) {
-            clearInterval(interval);
-        }
+            }, 1000)
+        );
     };
 
     render() {
@@ -89,14 +94,7 @@ class Session extends Component {
             </Container>
         ) : (
             <Container>
-                <Timer
-                    orientation={this.state.orientation}
-                    circleSection={this.state.circleSection}
-                    barProgress={this.state.barProgress}
-                    aboveHalfTime={this.state.aboveHalfTime}
-                    currentTime={this.state.currentTime}
-                    totalTime={this.state.totalTime}
-                />
+                <Timer />
                 <Nav />
             </Container>
         );
@@ -104,13 +102,7 @@ class Session extends Component {
 }
 
 const mapStateToProps = state => ({
-    currentTime: state.currentTime,
-    isRunning: state.isRunning,
-    totalTime: state.totalTime,
-    aboveHalfTime: state.aboveHalfTime,
-    circleSection: state.circleSection,
-    barProgress: state.barProgress,
-    orientation: state.orientation
+    timer: state.timer
 });
 
 const mapDispatchToProps = dispatch =>
