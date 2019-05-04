@@ -122,7 +122,7 @@ class User extends Component {
                         <input
                             id="color"
                             type="color"
-                            value="#fdffff"
+                            value={this.props.timer.primaryColor}
                             onChange={this.handleColorConfig}
                         />
                     </FormRow>
