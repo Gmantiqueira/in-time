@@ -57,9 +57,21 @@ export const TimerBtn = styled.button`
 
     margin-bottom: 16px;
 
-    &:last-of-type {
-        margin-bottom: 0;
-    }
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 45px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
+`;
+
+export const AddTimer = styled.input`
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    border: 0;
+
+    height: 48px;
+    width: 300px;
 
     font-weight: 500;
     font-size: 32px;
@@ -67,4 +79,13 @@ export const TimerBtn = styled.button`
     text-align: center;
     letter-spacing: -0.02em;
     text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
+
+    &::placeholder {
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 45px;
+        text-align: center;
+        letter-spacing: -0.02em;
+        text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
+    }
 `;

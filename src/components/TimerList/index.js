@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Creators as TimerActions } from "../../store/ducks/timer";
+import { Creators as TimerListActions } from "../../store/ducks/timerList";
 
-import { Wrapper, TimerBtn } from "./styles";
+import { Wrapper, TimerBtn, AddTimer } from "./styles";
 
 class TimerList extends Component {
     static propTypes = {
@@ -16,41 +16,44 @@ class TimerList extends Component {
             aboveHalfTime: PropTypes.bool,
             circleSection: PropTypes.number,
             barProgress: PropTypes.string
+        }).isRequired,
+        addTimerRequest: PropTypes.func.isRequired,
+        timerList: PropTypes.shape({
+            data: PropTypes.arrayOf(
+                PropTypes.shape({
+                    value: PropTypes.number
+                })
+            )
         }).isRequired
+    };
+
+    state = {
+        timers: ""
     };
 
     render() {
         return (
-            <Wrapper
-                isRunning={this.props.timer.isRunning}
-                currentTime={this.props.timer.currentTime}
-            >
-                <TimerBtn onClick={this.props.startTimer} value=".3">
-                    1
-                </TimerBtn>
-                <TimerBtn onClick={this.props.startTimer} value="3">
-                    3
-                </TimerBtn>
-                <TimerBtn onClick={this.props.startTimer} value="5">
-                    5
-                </TimerBtn>
-                <TimerBtn onClick={this.props.startTimer} value="10">
-                    10
-                </TimerBtn>
-                <TimerBtn onClick={this.props.startTimer} value="20">
-                    20
-                </TimerBtn>
+            <Wrapper>
+                {this.props.timerList.data.map(timer => (
+                    <TimerBtn
+                        onClick={this.props.startTimer}
+                        value={timer.value}
+                    >
+                        {timer.value}
+                    </TimerBtn>
+                ))}
+                <AddTimer placeholder="+" />
             </Wrapper>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    timer: state.timer
+    timerList: state.timerList
 });
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(TimerActions, dispatch);
+    bindActionCreators(TimerListActions, dispatch);
 
 export default connect(
     mapStateToProps,
