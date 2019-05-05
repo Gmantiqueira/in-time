@@ -3,13 +3,7 @@ export const Types = {
 };
 
 const INITIAL_STATE = {
-    data: [
-        { value: 1 },
-        { value: 3 },
-        { value: 5 },
-        { value: 10 },
-        { value: 20 }
-    ]
+    data: [1, 3, 5, 10, 20]
 };
 
 export default function timers(state = INITIAL_STATE, action) {
@@ -29,8 +23,8 @@ export default function timers(state = INITIAL_STATE, action) {
  */
 
 export const Creators = {
-    addTimer: timer => ({
+    addTimer: data => ({
         type: Types.ADD_TIMER,
-        payload: { timer }
+        payload: { data }
     })
 };

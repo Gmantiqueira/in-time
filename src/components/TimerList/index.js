@@ -17,7 +17,7 @@ class TimerList extends Component {
             circleSection: PropTypes.number,
             barProgress: PropTypes.string
         }).isRequired,
-        addTimerRequest: PropTypes.func.isRequired,
+        addTimer: PropTypes.func.isRequired,
         timerList: PropTypes.shape({
             data: PropTypes.arrayOf(
                 PropTypes.shape({
@@ -28,21 +28,34 @@ class TimerList extends Component {
     };
 
     state = {
-        timers: ""
+        timerInput: ""
+    };
+
+    createTimer = e => {
+        e.preventDefault();
+
+        this.props.addTimer(this.state.timerInput);
+
+        this.setState({ timerInput: "" });
     };
 
     render() {
         return (
             <Wrapper>
                 {this.props.timerList.data.map(timer => (
-                    <TimerBtn
-                        onClick={this.props.startTimer}
-                        value={timer.value}
-                    >
-                        {timer.value}
+                    <TimerBtn onClick={this.props.startTimer} value={timer}>
+                        {timer}
                     </TimerBtn>
                 ))}
-                <AddTimer placeholder="+" />
+                <form onSubmit={this.createTimer}>
+                    <AddTimer
+                        placeholder="+"
+                        value={this.state.timerInput}
+                        onChange={e =>
+                            this.setState({ timerInput: e.target.value })
+                        }
+                    />
+                </form>
             </Wrapper>
         );
     }
