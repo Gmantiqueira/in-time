@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Creators as TimerListActions } from "../../store/ducks/timerList";
 
-import { Wrapper, TimerBtn, AddTimer } from "./styles";
+import { Wrapper, TimerBtn, AddTimer, RemoveTimer } from "./styles";
 
 class TimerList extends Component {
     static propTypes = {
@@ -34,18 +34,30 @@ class TimerList extends Component {
     createTimer = e => {
         e.preventDefault();
 
-        this.props.addTimer(this.state.timerInput);
+        this.props.addTimer(Number(this.state.timerInput));
 
         this.setState({ timerInput: "" });
+    };
+
+    removeTimer = e => {
+        e.preventDefault();
+
+        this.props.removeTimer(Number(e.target.value));
     };
 
     render() {
         return (
             <Wrapper>
                 {this.props.timerList.data.map(timer => (
-                    <TimerBtn onClick={this.props.startTimer} value={timer}>
-                        {timer}
-                    </TimerBtn>
+                    <div className="relative">
+                        <TimerBtn onClick={this.props.startTimer} value={timer}>
+                            {timer}
+                        </TimerBtn>
+
+                        <RemoveTimer onClick={this.removeTimer} value={timer}>
+                            DELETE
+                        </RemoveTimer>
+                    </div>
                 ))}
                 <form onSubmit={this.createTimer}>
                     <AddTimer

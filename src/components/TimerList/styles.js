@@ -10,12 +10,32 @@ export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    overflow-y: scroll;
+    overflow-y: visible;
 
     max-height: 240px;
     padding: 32px 0;
 
     position: relative;
+
+    div {
+        margin-bottom: 16px;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 2px;
+    }
+    ::-webkit-scrollbar-track {
+        background: ${palette.secondaryColor};
+    }
+    ::-webkit-scrollbar-thumb {
+        background: ${palette.primaryryColor};
+        transition: 0.3s ease all;
+        &:hover {
+            opacity: 0.7;
+            transition: 0.3s ease all;
+        }
+    }
 
     &:after,
     &:before {
@@ -54,8 +74,7 @@ export const TimerBtn = styled.button`
 
     height: 48px;
     width: 300px;
-
-    margin-bottom: 16px;
+    position: relative;
 
     font-weight: 500;
     font-size: 32px;
@@ -63,6 +82,12 @@ export const TimerBtn = styled.button`
     text-align: center;
     letter-spacing: -0.02em;
     text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
+
+    transition: 0.3s ease background-color;
+
+    &:hover {
+        background-color: ${palette.primaryColor};
+    }
 `;
 
 export const AddTimer = styled.input`
@@ -80,6 +105,12 @@ export const AddTimer = styled.input`
     letter-spacing: -0.02em;
     text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
 
+    transition: 0.3s ease background-color;
+
+    &:hover {
+        background-color: ${palette.primaryColor};
+    }
+
     &::placeholder {
         font-weight: 500;
         font-size: 32px;
@@ -88,4 +119,27 @@ export const AddTimer = styled.input`
         letter-spacing: -0.02em;
         text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
     }
+`;
+
+export const RemoveTimer = styled.button`
+    display: flex;
+    position: absolute;
+
+    height: 100%;
+    align-items: center;
+
+    background: none;
+    border: none;
+    outline: none;
+
+    left: calc(100% + 48px);
+    top: 0;
+
+    font-size: 16px;
+    line-height: 23px;
+    text-align: center;
+    letter-spacing: 0.3em;
+
+    color: #ffffff;
+    opacity: 0.4;
 `;

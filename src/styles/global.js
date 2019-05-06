@@ -46,6 +46,10 @@ const GlobalStyle = createGlobalStyle`
     button {
         cursor: pointer;
     }
+
+    .relative{
+        position: relative;
+    }
 `;
 
 export default GlobalStyle;
