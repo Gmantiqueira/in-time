@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -10,34 +11,33 @@ import TimerList from "../../components/TimerList";
 import Nav from "../../components/Nav";
 
 class Session extends Component {
-    static propTypes = {};
-
-    state = {
-        currentTime: null,
-        totalTime: 0,
-        aboveHalfTime: true,
-        isRunning: false,
-        circleSection: null,
-        barProgress: 100,
-        orientation: "vertical"
+    static propTypes = {
+        timer: PropTypes.shape({
+            currentTime: PropTypes.number,
+            currentTimeFormated: PropTypes.string,
+            isRunning: PropTypes.bool,
+            totalTime: PropTypes.number,
+            aboveHalfTime: PropTypes.bool,
+            circleSection: PropTypes.number,
+            barProgress: PropTypes.string
+        }).isRequired
     };
 
     handleStartTimer = e => {
-        let time = e.target.value * 60;
-        let totalTime = e.target.value * 60;
-        this.setState({ totalTime: e.target.value * 60 });
+        this.props.is_Running(true);
+
         this.props.setTotalTime(e.target.value * 60);
+        this.props.setCurrentTime(e.target.value * 60);
 
         this.props.setTimer(
             setInterval(() => {
-                time--;
+                let time = this.props.timer.currentTime;
+                let totalTime = this.props.timer.totalTime;
+                this.props.decreaseTimer();
 
                 let aboveHalfTime;
 
-                this.setState({ isRunning: true });
-                this.props.is_Running(this.state.isRunning);
-
-                if (this.state.orientation === "circular") {
+                if (this.props.timer.orientation === "circular") {
                     let circleSection;
                     if (time >= totalTime / 2) {
                         aboveHalfTime = true;
@@ -47,21 +47,16 @@ class Session extends Component {
                         circleSection =
                             90 - (180 / (totalTime / 2)) * time - 180;
                     }
-                    this.setState({
-                        circleSection: circleSection,
-                        aboveHalfTime: aboveHalfTime
-                    });
-                    this.props.isAboveHalf(this.state.aboveHalfTime);
-                    this.props.setCircleStyle(this.state.circleSection);
+
+                    console.log(circleSection);
+
+                    this.props.isAboveHalf(aboveHalfTime);
+                    this.props.setCircleStyle(circleSection);
                 }
 
-                if (this.state.orientation === "vertical") {
-                    let barProgress;
-                    barProgress = (100 * time) / totalTime + "%";
-                    this.setState({
-                        barProgress: barProgress
-                    });
-                    this.props.setBarStyle(this.state.barProgress);
+                if (this.props.timer.orientation === "vertical") {
+                    let barProgress = (100 * time) / totalTime + "%";
+                    this.props.setBarStyle(barProgress);
                 }
 
                 let minutes = Math.floor((time % (60 * 60)) / 60);
@@ -72,22 +67,19 @@ class Session extends Component {
                 }
                 let format = minutes + ":" + seconds;
 
-                this.setState({
-                    currentTime: format
-                });
-                this.props.setCurrentTime(this.state.currentTime);
+                this.props.setCurrentTimeFormated(format);
 
                 if (time === 0) {
                     format = "0:00";
-                    clearInterval(this);
-                    this.setState({ isRunning: false });
+                    clearInterval(this.props.timer.timer);
+                    this.props.is_Running(false);
                 }
             }, 1000)
         );
     };
 
     render() {
-        return this.state.isRunning === false ? (
+        return this.props.timer.isRunning === false ? (
             <Container>
                 <TimerList startTimer={this.handleStartTimer} />
                 <Nav />

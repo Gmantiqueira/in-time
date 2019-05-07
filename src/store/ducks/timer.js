@@ -1,6 +1,8 @@
 export const Types = {
     SET_TIMER: "timer/SET_TIMER",
     SET_CURRENT: "timer/SET_CURRENT",
+    DECREASE: "timer/DECREASE",
+    FORMAT_TIME: "timer/FORMAT_TIME",
     RUNNING: "timer/RUNNING",
     TOTAL: "timer/TOTAL",
     ABOVE_HALF: "timer/ABOVE_HALF",
@@ -13,7 +15,8 @@ export const Types = {
 };
 
 const INITIAL_STATE = {
-    currentTime: null,
+    currentTime: 0,
+    currentTimeFormated: null,
     isRunning: false,
     totalTime: 0,
     aboveHalfTime: true,
@@ -36,6 +39,16 @@ export default function timer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 currentTime: action.payload.currentTime
+            };
+        case Types.DECREASE:
+            return {
+                ...state,
+                currentTime: state.currentTime - 1
+            };
+        case Types.FORMAT_TIME:
+            return {
+                ...state,
+                currentTimeFormated: action.payload.currentTimeFormated
             };
         case Types.RUNNING:
             return {
@@ -96,6 +109,13 @@ export const Creators = {
     setCurrentTime: currentTime => ({
         type: Types.SET_CURRENT,
         payload: { currentTime }
+    }),
+    decreaseTimer: () => ({
+        type: Types.DECREASE
+    }),
+    setCurrentTimeFormated: currentTimeFormated => ({
+        type: Types.FORMAT_TIME,
+        payload: { currentTimeFormated }
     }),
     is_Running: isRunning => ({
         type: Types.RUNNING,

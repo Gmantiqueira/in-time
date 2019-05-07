@@ -10,7 +10,8 @@ import { Container } from "./styles";
 class Timer extends Component {
     static propTypes = {
         timer: PropTypes.shape({
-            currentTime: PropTypes.string,
+            currentTime: PropTypes.number,
+            currentTimeFormated: PropTypes.string,
             isRunning: PropTypes.bool,
             totalTime: PropTypes.number,
             aboveHalfTime: PropTypes.bool,
@@ -30,7 +31,7 @@ class Timer extends Component {
                 totalTime={this.props.timer.totalTime}
                 orientation={this.props.timer.orientation}
             >
-                <span>{this.props.timer.currentTime}</span>
+                <span>{this.props.timer.currentTimeFormated}</span>
                 <div className={this.props.timer.orientation} />
             </Container>
         );

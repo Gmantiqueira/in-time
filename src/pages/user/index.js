@@ -74,35 +74,31 @@ class User extends Component {
 
         console.log(this);
 
-        this.setState({
-            primaryColor: e.target.value
-        });
-        this.setState({
-            secondaryColor: this.toSecondaryColor(this.state.primaryColor)
-        });
-
-        this.props.changePrimary(this.state.primaryColor);
-        this.props.changeSecondary(this.state.secondaryColor);
+        this.props.changePrimary(e.target.value);
+        this.props.changeSecondary(this.toSecondaryColor(e.target.value));
     };
 
     handleSessionConfig = e => {
         e.preventDefault();
 
-        this.props.changeSession(this.state.sessionName);
-
-        this.setState({
-            sessionName: e.target.value
-        });
+        this.props.changeSession(e.target.value);
     };
 
     handleOrientationConfig = e => {
         e.preventDefault();
 
-        this.setState({
-            orientation: e.target.value
-        });
+        this.props.changeOrientation(e.target.value);
 
-        this.props.changeOrientation(this.state.orientation);
+        console.log(e.target);
+        console.log(this);
+
+        if (e.target.value === "vertical") {
+            e.target.classList.add("active");
+            e.target.nextSibling.classList.remove("active");
+        } else {
+            e.target.classList.add("active");
+            e.target.previousSibling.classList.remove("active");
+        }
     };
 
     render() {
@@ -149,7 +145,7 @@ class User extends Component {
                             </button>
 
                             <button
-                                value="horizontal"
+                                value="circular"
                                 onClick={this.handleOrientationConfig}
                             >
                                 circular
