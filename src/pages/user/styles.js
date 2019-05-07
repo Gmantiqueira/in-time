@@ -7,7 +7,7 @@ var palette = {
 };
 
 export const Container = styled.div`
-    background: ${palette.primaryColor};
+    background: ${palette.secondaryColor};
 
     max-height: 100%;
     width: 100%;
@@ -106,13 +106,8 @@ export const FormRow = styled.form`
             opacity: .5;
             text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
 
-            &:first-of-type{
-                opacity: ${props =>
-                    props.orientation === "vertical" ? 1 : 0.5};
-            }
-            &:last-of-type{
-                opacity: ${props =>
-                    props.orientation === "circular" ? 1 : 0.5};
+            &.active{
+                opacity: 1;
             }
         }
     }
