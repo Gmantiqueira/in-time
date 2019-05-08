@@ -1,7 +1,6 @@
 export const Types = {
     SET_TIMER: "timer/SET_TIMER",
     SET_CURRENT: "timer/SET_CURRENT",
-    DECREASE: "timer/DECREASE",
     FORMAT_TIME: "timer/FORMAT_TIME",
     RUNNING: "timer/RUNNING",
     TOTAL: "timer/TOTAL",
@@ -11,7 +10,8 @@ export const Types = {
     PRIMARY_COLOR: "timer/PRIMARY_COLOR",
     SECONDARY_COLOR: "timer/SECONDARY_COLOR",
     SESSION: "timer/SESSION",
-    ORIENTATION: "timer/ORIENTATION"
+    ORIENTATION: "timer/ORIENTATION",
+    DECREASE: "timer/DECREASE"
 };
 
 const INITIAL_STATE = {
