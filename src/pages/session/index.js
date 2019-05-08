@@ -23,6 +23,8 @@ class Session extends Component {
         }).isRequired
     };
 
+
+
     handleStartTimer = e => {
         this.props.is_Running(true);
 
@@ -32,7 +34,7 @@ class Session extends Component {
 
     render() {
         return this.props.timer.isRunning === false ? (
-            <Container>
+            <Container secondaryColor={this.props.timer.secondaryColor}>
                 <TimerList startTimer={this.handleStartTimer} />
                 <Nav />
             </Container>

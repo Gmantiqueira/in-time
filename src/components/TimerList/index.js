@@ -47,14 +47,17 @@ class TimerList extends Component {
 
     render() {
         return (
-            <Wrapper>
+            <Wrapper
+                primaryColor={this.props.timer.primaryColor}
+                secondaryColor={this.props.timer.secondaryColor}
+            >
                 {this.props.timerList.data.map(timer => (
                     <div className="relative">
-                        <TimerBtn onClick={this.props.startTimer} value={timer}>
+                        <TimerBtn primaryColor={this.props.timer.primaryColor} onClick={this.props.startTimer} value={timer}>
                             {timer}
                         </TimerBtn>
 
-                        <RemoveTimer onClick={this.removeTimer} value={timer}>
+                        <RemoveTimer primaryColor={this.props.timer.primaryColor} onClick={this.removeTimer} value={timer}>
                             DELETE
                         </RemoveTimer>
                     </div>
@@ -66,6 +69,7 @@ class TimerList extends Component {
                         onChange={e =>
                             this.setState({ timerInput: e.target.value })
                         }
+                        primaryColor={this.props.timer.primaryColor}
                     />
                 </form>
             </Wrapper>
@@ -74,7 +78,8 @@ class TimerList extends Component {
 }
 
 const mapStateToProps = state => ({
-    timerList: state.timerList
+    timerList: state.timerList,
+    timer: state.timer
 });
 
 const mapDispatchToProps = dispatch =>

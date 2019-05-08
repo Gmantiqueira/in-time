@@ -1,13 +1,7 @@
 import styled from "styled-components";
-import store from "../../store";
-
-var palette = {
-    primaryColor: store.getState().timer.primaryColor,
-    secondaryColor: store.getState().timer.secondaryColor
-};
 
 export const Container = styled.div`
-    background: ${palette.secondaryColor};
+    background: ${props => props.secondaryColor};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,23 +12,23 @@ export const Container = styled.div`
 
     div {
         &.circular {
-            background-color: ${palette.primaryColor};
+            background-color: ${props => props.primaryColor};
             background-image: ${props =>
                 props.aboveHalfTime
                     ? `
                 linear-gradient(${props.circleSection}deg, transparent 50%, ${
-                          palette.secondaryColor
+                    props.secondaryColor
                       } 50%),
                 linear-gradient(90deg, ${
-                    palette.secondaryColor
+                    props.secondaryColor
                 }50%, transparent 50%);
             `
                     : `
                 linear-gradient(${props.circleSection}deg, transparent 50%, ${
-                          palette.primaryColor
+                    props.primaryColor
                       } 50%),
                 linear-gradient(90deg, ${
-                    palette.secondaryColor
+                    props.secondaryColor
                 }50%, transparent 50%);
             `};
             height: 200%;
@@ -45,7 +39,7 @@ export const Container = styled.div`
         }
 
         &.vertical {
-            background-color: ${palette.primaryColor};
+            background-color: ${props => props.primaryColor};
             bottom: 0;
             height: ${props => props.barProgress};
             width: 100%;
@@ -64,5 +58,8 @@ export const Container = styled.div`
         color: #ffffff;
 
         z-index: 2;
+        @media screen and (max-width: 992px){
+            font-size: 128px;
+        }
     }
 `;

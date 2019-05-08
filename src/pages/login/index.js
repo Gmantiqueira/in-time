@@ -1,11 +1,16 @@
 import React, { Component } from "react";
 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Creators as TimerActions } from "../../store/ducks/timer";
+
 import { Container, Title, Form } from "./styles";
 
-export default class Login extends Component {
+class Login extends Component {
+
     state = {
-        username: ""
-    };
+        username: ''
+    }
 
     handleInputChange = e => {
         this.setState({ username: e.target.value });
@@ -25,12 +30,12 @@ export default class Login extends Component {
 
     render() {
         return (
-            <Container>
+            <Container secondaryColor={this.props.timer.secondaryColor}>
                 <Title>
                     <h3>In Time</h3>
                 </Title>
 
-                <Form onSubmit={this.handleSubmit}>
+                <Form primaryColor={this.props.timer.primaryColor} onSubmit={this.handleSubmit}>
                     <label>Insira seu nome de usuário</label>
                     <input
                         type="text"
@@ -42,3 +47,15 @@ export default class Login extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    timer: state.timer
+});
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(TimerActions, dispatch);
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Login);

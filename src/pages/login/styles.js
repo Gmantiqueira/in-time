@@ -1,10 +1,4 @@
 import styled from "styled-components";
-import store from "../../store";
-
-var palette = {
-    primaryColor: store.getState().timer.primaryColor,
-    secondaryColor: store.getState().timer.secondaryColor
-};
 
 export const Container = styled.div`
     max-height: 100%;
@@ -14,7 +8,7 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
 
-    background: ${palette.secondaryColor};
+    background: ${props => props.secondaryColor};
 `;
 
 export const Title = styled.div`
@@ -39,7 +33,7 @@ export const Form = styled.form`
     display: flex;
     flex-direction: column;
 
-    background: ${palette.primaryColor};
+    background: ${props => props.primaryColor};
     border-radius: 8px;
     padding: 16px 8px;
 
@@ -48,6 +42,6 @@ export const Form = styled.form`
     }
 
     input {
-        color: ${palette.primaryColor};
+        color: ${props => props.primaryColor};
     }
 `;

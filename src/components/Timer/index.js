@@ -58,7 +58,6 @@ class Timer extends Component {
             this.props.setCurrentTimeFormated(format);
 
             if (time === 0) {
-                format = "0:00";
                 clearInterval(this.props.timer.timer);
                 this.props.is_Running(false);
             }
@@ -77,9 +76,9 @@ class Timer extends Component {
                 isRunning={this.props.timer.isRunning}
                 barProgress={this.props.timer.barProgress}
                 aboveHalfTime={this.props.timer.aboveHalfTime}
-                currentTime={this.props.timer.currentTime}
-                totalTime={this.props.timer.totalTime}
                 orientation={this.props.timer.orientation}
+                primaryColor={this.props.timer.primaryColor}
+                secondaryColor={this.props.timer.secondaryColor}
             >
                 <span>{this.props.timer.currentTimeFormated}</span>
                 <div className={this.props.timer.orientation} />

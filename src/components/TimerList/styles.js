@@ -1,10 +1,4 @@
 import styled from "styled-components";
-import store from "../../store";
-
-var palette = {
-    primaryColor: store.getState().timer.primaryColor,
-    secondaryColor: store.getState().timer.secondaryColor
-};
 
 export const Wrapper = styled.div`
     display: flex;
@@ -26,10 +20,10 @@ export const Wrapper = styled.div`
         width: 2px;
     }
     ::-webkit-scrollbar-track {
-        background: ${palette.secondaryColor};
+        background: ${props => props.secondaryColor};
     }
     ::-webkit-scrollbar-thumb {
-        background: ${palette.primaryryColor};
+        background: ${props => props.primaryryColor};
         transition: 0.3s ease all;
         &:hover {
             opacity: 0.7;
@@ -49,17 +43,19 @@ export const Wrapper = styled.div`
     &:after {
         background: linear-gradient(
             0deg,
-            ${palette.secondaryColor} 0%,
+            ${props => props.secondaryColor} 0%,
             rgba(47, 55, 69, 0) 100%
         );
 
         bottom: 0;
+
+        display: none;
     }
 
     &:before {
         background: linear-gradient(
             180deg,
-            ${palette.secondaryColor} 0%,
+            ${props => props.secondaryColor} 0%,
             rgba(47, 55, 69, 0) 100%
         );
 
@@ -86,7 +82,7 @@ export const TimerBtn = styled.button`
     transition: 0.3s ease background-color;
 
     &:hover {
-        background-color: ${palette.primaryColor};
+        background-color: ${props => props.primaryColor};
     }
 `;
 
@@ -108,7 +104,7 @@ export const AddTimer = styled.input`
     transition: 0.3s ease background-color;
 
     &:hover {
-        background-color: ${palette.primaryColor};
+        background-color: ${props => props.primaryColor};
     }
 
     &::placeholder {

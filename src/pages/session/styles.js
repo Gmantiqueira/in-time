@@ -1,13 +1,7 @@
 import styled from "styled-components";
-import store from "../../store";
-
-var palette = {
-    primaryColor: store.getState().timer.primaryColor,
-    secondaryColor: store.getState().timer.secondaryColor
-};
 
 export const Container = styled.div`
-    background: ${palette.secondaryColor};
+    background: ${props => props.secondaryColor};
 
     max-height: 100%;
     width: 100%;
