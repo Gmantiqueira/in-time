@@ -62,20 +62,17 @@ class User extends Component {
         return colorInHSL;
     };
 
-    state = {
-        primaryColor: "#f71963",
-        secondaryColor: "hsl(340, 20%, 20%)",
-        orientation: "vertical",
-        sessionName: ""
-    };
-
     handleColorConfig = e => {
         e.preventDefault();
 
-        console.log(this);
-
         this.props.changePrimary(e.target.value);
         this.props.changeSecondary(this.toSecondaryColor(e.target.value));
+
+        let primary = e.target.value
+
+        document.getElementById('colorWrapper').style.backgroundColor = primary;
+
+        console.log(this.props.timer)
     };
 
     handleSessionConfig = e => {
@@ -88,22 +85,14 @@ class User extends Component {
         e.preventDefault();
 
         this.props.changeOrientation(e.target.value);
-
-        console.log(e.target);
-        console.log(this);
-
-        if (e.target.value === "vertical") {
-            e.target.classList.add("active");
-            e.target.nextSibling.classList.remove("active");
-        } else {
-            e.target.classList.add("active");
-            e.target.previousSibling.classList.remove("active");
-        }
     };
 
     render() {
         return (
-            <Container>
+            <Container
+                primaryColor={this.props.timer.primaryColor}
+                secondaryColor={this.props.timer.secondaryColor}
+            >
                 <Profile>
                     <div>
                         <img src={Photo} alt="Profile" />
@@ -113,14 +102,16 @@ class User extends Component {
                 </Profile>
 
                 <FormList>
-                    <FormRow>
+                    <FormRow primaryColor={this.props.timer.primaryColor}>
                         <label>Team highlight color</label>
-                        <input
-                            id="color"
-                            type="color"
-                            value={this.props.timer.primaryColor}
-                            onChange={this.handleColorConfig}
-                        />
+                        <div className="wrapper" id="colorWrapper">
+                            <input
+                                id="color"
+                                type="color"
+                                value={this.props.timer.primaryColor}
+                                onChange={this.handleColorConfig}
+                            />
+                        </div>
                     </FormRow>
 
                     <FormRow>
@@ -128,7 +119,7 @@ class User extends Component {
 
                         <input
                             type="text"
-                            value={this.state.sessionName}
+                            value={this.props.timer.sessionName}
                             onChange={this.handleSessionConfig}
                         />
                     </FormRow>
@@ -140,6 +131,7 @@ class User extends Component {
                             <button
                                 value="vertical"
                                 onClick={this.handleOrientationConfig}
+                                className={this.props.timer.orientation === 'vertical' ? 'active' : ''}
                             >
                                 vertical
                             </button>
@@ -147,6 +139,7 @@ class User extends Component {
                             <button
                                 value="circular"
                                 onClick={this.handleOrientationConfig}
+                                className={this.props.timer.orientation === 'circular' ? 'active' : ''}
                             >
                                 circular
                             </button>

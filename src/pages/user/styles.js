@@ -1,13 +1,7 @@
 import styled from "styled-components";
-import store from "../../store";
-
-var palette = {
-    primaryColor: store.getState().timer.primaryColor,
-    secondaryColor: store.getState().timer.secondaryColor
-};
 
 export const Container = styled.div`
-    background: ${palette.secondaryColor};
+    background: ${props => props.secondaryColor};
 
     max-height: 100%;
     width: 100%;
@@ -113,23 +107,17 @@ export const FormRow = styled.form`
     }
 
     input[type=color] {
-        background: ${palette.primaryColor};
-        border: 0;
-        border-radius: 3px;
-        outline: 0;
-        padding: 4px 16px;
+        cursor: pointer;
+        opacity: 0;
+        height: 100%;
+        max-width: 100%;
+        width: 100%;
+    }
 
-        &:after{
-            content: '${palette.primaryColor}';
-            display: block;
-            height: 100%;
-            width: 100%;
-            font-family: Circular Std;
-            font-weight: 450;
-            font-size: 14px;
-            line-height: 20px;
-            text-align: center;
-            color: #ffffff;
-        }
+    .wrapper{
+        background-color: ${props => props.primaryColor};
+        height: 24px;
+        width: 96px;
+        border-radius: 4px;
     }
 `;
