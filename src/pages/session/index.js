@@ -23,13 +23,63 @@ class Session extends Component {
         }).isRequired
     };
 
-
-
     handleStartTimer = e => {
-        this.props.is_Running(true);
+        let now = new Date();
+        let end = new Date();
+        end = end.setMinutes(end.getMinutes() + Number(e.target.value))
 
-        this.props.setTotalTime(e.target.value * 60);
-        this.props.setCurrentTime(e.target.value * 60);
+        let distance = (end - now) / 1000;
+
+        this.props.is_Running(true);
+        this.props.setTotalTime(distance);
+        this.props.setCurrentTime(distance);
+
+        let timer = setInterval(() => {
+            let time = this.props.timer.currentTime;
+            let totalTime = this.props.timer.totalTime;
+
+            let aboveHalfTime;
+
+            if (this.props.timer.orientation === "circular") {
+                let circleSection;
+                if (time >= totalTime / 2) {
+                    aboveHalfTime = true;
+                    circleSection = 90 - (180 / (totalTime / 2)) * time;
+                } else {
+                    aboveHalfTime = false;
+                    circleSection =
+                        90 - (180 / (totalTime / 2)) * time - 180;
+                }
+
+                this.props.isAboveHalf(aboveHalfTime);
+                this.props.setCircleStyle(circleSection);
+            }
+
+            if (this.props.timer.orientation === "vertical") {
+                let barProgress = (100 * time) / totalTime + "%";
+                this.props.setBarStyle(barProgress);
+            }
+
+            let minutes = Math.floor((time % (60 * 60)) / 60);
+            let seconds = Math.floor(time % 60);
+
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            let format = minutes + ":" + seconds;
+
+            this.props.setCurrentTimeFormated(format);
+
+            if (time === 0) {
+                clearInterval(this.props.timer.timer);
+                this.props.is_Running(false);
+            }
+
+            this.props.decreaseTimer();
+            console.log(this.props)
+        }, 1000);
+
+        this.props.setTimer(timer);
     };
 
     render() {
