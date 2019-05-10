@@ -12,24 +12,24 @@ export const Container = styled.div`
 
     div {
         &.circular {
-            background-color: ${props => props.primaryColor};
+            background-color: ${props => props.secondaryColor};
             background-image: ${props =>
                 props.aboveHalfTime
                     ? `
                 linear-gradient(${props.circleSection}deg, transparent 50%, ${
-                    props.secondaryColor
-                      } 50%),
-                linear-gradient(90deg, ${
-                    props.secondaryColor
-                }50%, transparent 50%);
-            `
-                    : `
-                linear-gradient(${props.circleSection}deg, transparent 50%, ${
                     props.primaryColor
                       } 50%),
                 linear-gradient(90deg, ${
+                    props.primaryColor
+                } 50%, transparent 50%);
+            `
+                    : `
+                linear-gradient(${props.circleSection}deg, transparent 50%, ${
                     props.secondaryColor
-                }50%, transparent 50%);
+                      } 50%),
+                linear-gradient(90deg, ${
+                    props.primaryColor
+                } 50%, transparent 50%);
             `};
             height: 200%;
             width: 200%;
