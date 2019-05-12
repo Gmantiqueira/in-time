@@ -68,11 +68,9 @@ class User extends Component {
         this.props.changePrimary(e.target.value);
         this.props.changeSecondary(this.toSecondaryColor(e.target.value));
 
-        let primary = e.target.value
+        let primary = e.target.value;
 
-        document.getElementById('colorWrapper').style.backgroundColor = primary;
-
-        console.log(this.props.timer)
+        document.getElementById("colorWrapper").style.backgroundColor = primary;
     };
 
     handleSessionConfig = e => {
@@ -86,6 +84,13 @@ class User extends Component {
 
         this.props.changeOrientation(e.target.value);
     };
+
+    componentWillUnmount() {
+        this.props.checkNow();
+        this.props.update();
+        this.props.updateStyle();
+        this.props.format();
+    }
 
     render() {
         return (
@@ -131,7 +136,11 @@ class User extends Component {
                             <button
                                 value="vertical"
                                 onClick={this.handleOrientationConfig}
-                                className={this.props.timer.orientation === 'vertical' ? 'active' : ''}
+                                className={
+                                    this.props.timer.orientation === "vertical"
+                                        ? "active"
+                                        : ""
+                                }
                             >
                                 vertical
                             </button>
@@ -139,7 +148,11 @@ class User extends Component {
                             <button
                                 value="circular"
                                 onClick={this.handleOrientationConfig}
-                                className={this.props.timer.orientation === 'circular' ? 'active' : ''}
+                                className={
+                                    this.props.timer.orientation === "circular"
+                                        ? "active"
+                                        : ""
+                                }
                             >
                                 circular
                             </button>
