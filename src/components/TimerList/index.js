@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+// import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -42,7 +43,20 @@ class TimerList extends Component {
     removeTimer = e => {
         e.preventDefault();
 
-        this.props.removeTimer(Number(e.target.value));
+        let value = e.target.value;
+
+        let timers = document.getElementsByClassName("timer-btn");
+
+        for (let i = 0; i < timers.length; i++) {
+            console.log(value, timers[i]);
+            if (value === timers[i].value) {
+                timers[i].classList.add("deleted");
+            }
+        }
+
+        setTimeout(() => {
+            this.props.removeTimer(Number(value));
+        }, 600);
     };
 
     render() {
@@ -52,8 +66,9 @@ class TimerList extends Component {
                 secondaryColor={this.props.timer.secondaryColor}
             >
                 {this.props.timerList.data.map(timer => (
-                    <div className="relative">
+                    <div key={timer} className="relative">
                         <TimerBtn
+                            className="timer-btn"
                             primaryColor={this.props.timer.primaryColor}
                             onClick={this.props.startTimer}
                             value={timer}

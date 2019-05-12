@@ -12,7 +12,30 @@ export const Wrapper = styled.div`
     position: relative;
 
     div {
-        margin-bottom: 16px;
+        margin: 8px 0;
+        overflow-y: visible;
+        overflow-x: visible;
+        -webkit-animation: add 0.5s linear;
+        animation: add 0.5s linear;
+        animation-fill-mode: forwards;
+
+        @-webkit-keyframes add {
+            from {
+                min-height: 0px;
+            }
+            to {
+                min-height: 48px;
+            }
+        }
+
+        @keyframes add {
+            from {
+                min-height: 0px;
+            }
+            to {
+                min-height: 48px;
+            }
+        }
     }
 
     /* width */
@@ -74,12 +97,22 @@ export const TimerBtn = styled.button`
 
     font-weight: 500;
     font-size: 32px;
+    left: 0;
+    opacity: 1;
     line-height: 45px;
     text-align: center;
     letter-spacing: -0.02em;
     text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
 
     transition: 0.3s ease background-color;
+    transition: left 2s ease, opacity 0.5s ease;
+
+    &.deleted {
+        position: absolute;
+        opacity: 0;
+        left: -1000%;
+        transition: left 2s ease, opacity 0.5s ease;
+    }
 
     &:hover {
         background-color: ${props => props.primaryColor};
