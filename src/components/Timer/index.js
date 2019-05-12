@@ -20,18 +20,37 @@ class Timer extends Component {
         }).isRequired
     };
 
+    // componentDidMount() {
+    //     this.props.update();
+    // }
+
+    componentDidMount() {
+        let timer = setInterval(() => {
+            this.props.checkNow();
+            this.props.update();
+            this.props.updateStyle();
+            this.props.is_Running();
+            this.props.format();
+        }, 1000);
+
+        this.props.setTimer(timer);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.props.timer.timer);
+    }
+
     render() {
         return (
             <Container
                 circleSection={this.props.timer.circleSection}
-                isRunning={this.props.timer.isRunning}
                 barProgress={this.props.timer.barProgress}
                 aboveHalfTime={this.props.timer.aboveHalfTime}
                 orientation={this.props.timer.orientation}
                 primaryColor={this.props.timer.primaryColor}
                 secondaryColor={this.props.timer.secondaryColor}
             >
-                <span>{this.props.timer.currentTimeFormated}</span>
+                <span>{this.props.timer.timeFormated}</span>
                 <div className={this.props.timer.orientation} />
             </Container>
         );

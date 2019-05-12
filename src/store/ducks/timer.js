@@ -1,29 +1,36 @@
 export const Types = {
     SET_TIMER: "timer/SET_TIMER",
-    SET_CURRENT: "timer/SET_CURRENT",
-    FORMAT_TIME: "timer/FORMAT_TIME",
-    RUNNING: "timer/RUNNING",
+    CHECK_RUNNING: "timer/CHECK_RUNNING",
+    CHECK_NOW: "timer/CHECK_NOW",
     TOTAL: "timer/TOTAL",
-    ABOVE_HALF: "timer/ABOVE_HALF",
-    CIRCLE_STYLE: "timer/CIRCLE_STYLE",
-    BAR_STYLE: "timer/BAR_STYLE",
     PRIMARY_COLOR: "timer/PRIMARY_COLOR",
     SECONDARY_COLOR: "timer/SECONDARY_COLOR",
     SESSION: "timer/SESSION",
     ORIENTATION: "timer/ORIENTATION",
-    DECREASE: "timer/DECREASE"
+
+    // teste
+
+    ENDLINE: "timer/ENDLINE",
+    FORMAT: "timer/FORMAT",
+    UPDATE: "timer/UPDATE",
+    UPDATE_STYLE: "timer/UPDATE_STYLE"
 };
 
 const INITIAL_STATE = {
-    currentTime: 0,
-    currentTimeFormated: null,
     isRunning: false,
+    now: "",
+    endline: "",
+    timeRemaining: 0,
     totalTime: 0,
+    timeFormated: "",
+
     aboveHalfTime: true,
     circleSection: null,
     barProgress: "100%",
+
     primaryColor: "#f71963",
     secondaryColor: "hsl(340, 20%, 20%)",
+
     sessionName: "",
     orientation: "vertical"
 };
@@ -35,47 +42,16 @@ export default function timer(state = INITIAL_STATE, action) {
                 ...state,
                 timer: action.payload.timer
             };
-        case Types.SET_CURRENT:
-            return {
-                ...state,
-                currentTime: action.payload.currentTime
-            };
-        case Types.DECREASE:
-            return {
-                ...state,
-                currentTime: state.currentTime - 1
-            };
-        case Types.FORMAT_TIME:
-            return {
-                ...state,
-                currentTimeFormated: action.payload.currentTimeFormated
-            };
-        case Types.RUNNING:
-            return {
-                ...state,
-                isRunning: action.payload.isRunning
-            };
+        // case Types.RUNNING:
+        //     return {
+        //         ...state,
+        //         isRunning: action.payload.isRunning
+        //     };
         case Types.TOTAL:
             return {
                 ...state,
                 totalTime: action.payload.totalTime
             };
-        case Types.ABOVE_HALF:
-            return {
-                ...state,
-                aboveHalfTime: action.payload.aboveHalfTime
-            };
-        case Types.CIRCLE_STYLE:
-            return {
-                ...state,
-                circleSection: action.payload.circleSection
-            };
-        case Types.BAR_STYLE:
-            return {
-                ...state,
-                barProgress: action.payload.barProgress
-            };
-
         case Types.PRIMARY_COLOR:
             return {
                 ...state,
@@ -96,6 +72,69 @@ export default function timer(state = INITIAL_STATE, action) {
                 ...state,
                 orientation: action.payload.orientation
             };
+        case Types.ENDLINE:
+            return {
+                ...state,
+                endline: action.payload.endline
+            };
+        case Types.FORMAT:
+            let time = state.timeRemaining;
+
+            let minutes = Math.floor((time % (60 * 60)) / 60);
+            let seconds = Math.floor(time % 60);
+
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            let format = minutes + ":" + seconds;
+
+            if (time === 0) {
+                clearInterval(state.timer);
+            }
+
+            return {
+                ...state,
+                timeFormated: format
+            };
+        case Types.CHECK_NOW:
+            return {
+                ...state,
+                now: Date.now()
+            };
+        case Types.CHECK_RUNNING:
+            return {
+                ...state,
+                isRunning: state.timeRemaining > 0 ? true : false
+            };
+        case Types.UPDATE:
+            return {
+                ...state,
+                timeRemaining: Math.round((state.endline - state.now) / 1000)
+            };
+
+        case Types.UPDATE_STYLE:
+            let aboveHalfTime;
+            let circleSection;
+            if (state.timeRemaining >= state.totalTime / 2) {
+                aboveHalfTime = true;
+                circleSection =
+                    90 - (180 / (state.totalTime / 2)) * state.timeRemaining;
+            } else {
+                aboveHalfTime = false;
+                circleSection =
+                    90 -
+                    (180 / (state.totalTime / 2)) * state.timeRemaining -
+                    180;
+            }
+
+            return {
+                ...state,
+                barProgress:
+                    (100 * state.timeRemaining) / state.totalTime + "%",
+                circleSection: circleSection,
+                aboveHalfTime: aboveHalfTime
+            };
+
         default:
             return state;
     }
@@ -106,36 +145,12 @@ export const Creators = {
         type: Types.SET_TIMER,
         payload: { timer }
     }),
-    setCurrentTime: currentTime => ({
-        type: Types.SET_CURRENT,
-        payload: { currentTime }
-    }),
-    decreaseTimer: () => ({
-        type: Types.DECREASE
-    }),
-    setCurrentTimeFormated: currentTimeFormated => ({
-        type: Types.FORMAT_TIME,
-        payload: { currentTimeFormated }
-    }),
-    is_Running: isRunning => ({
-        type: Types.RUNNING,
-        payload: { isRunning }
+    is_Running: () => ({
+        type: Types.CHECK_RUNNING
     }),
     setTotalTime: totalTime => ({
         type: Types.TOTAL,
         payload: { totalTime }
-    }),
-    isAboveHalf: aboveHalfTime => ({
-        type: Types.ABOVE_HALF,
-        payload: { aboveHalfTime }
-    }),
-    setCircleStyle: circleSection => ({
-        type: Types.CIRCLE_STYLE,
-        payload: { circleSection }
-    }),
-    setBarStyle: barProgress => ({
-        type: Types.BAR_STYLE,
-        payload: { barProgress }
     }),
     changePrimary: primaryColor => ({
         type: Types.PRIMARY_COLOR,
@@ -152,5 +167,21 @@ export const Creators = {
     changeOrientation: orientation => ({
         type: Types.ORIENTATION,
         payload: { orientation }
+    }),
+    setEndline: endline => ({
+        type: Types.ENDLINE,
+        payload: { endline }
+    }),
+    checkNow: () => ({
+        type: Types.CHECK_NOW
+    }),
+    format: () => ({
+        type: Types.FORMAT
+    }),
+    updateStyle: () => ({
+        type: Types.UPDATE_STYLE
+    }),
+    update: () => ({
+        type: Types.UPDATE
     })
 };

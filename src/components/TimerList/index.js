@@ -53,11 +53,19 @@ class TimerList extends Component {
             >
                 {this.props.timerList.data.map(timer => (
                     <div className="relative">
-                        <TimerBtn primaryColor={this.props.timer.primaryColor} onClick={this.props.startTimer} value={timer}>
+                        <TimerBtn
+                            primaryColor={this.props.timer.primaryColor}
+                            onClick={this.props.startTimer}
+                            value={timer}
+                        >
                             {timer}
                         </TimerBtn>
 
-                        <RemoveTimer primaryColor={this.props.timer.primaryColor} onClick={this.removeTimer} value={timer}>
+                        <RemoveTimer
+                            primaryColor={this.props.timer.primaryColor}
+                            onClick={this.removeTimer}
+                            value={timer}
+                        >
                             DELETE
                         </RemoveTimer>
                     </div>
