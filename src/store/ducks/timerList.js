@@ -12,7 +12,9 @@ export default function timers(state = INITIAL_STATE, action) {
         case Types.ADD_TIMER:
             return {
                 ...state,
-                data: [...state.data, action.payload.data]
+                data: [...state.data, action.payload.data].sort(function(a, b) {
+                    return a - b;
+                })
             };
         case Types.REMOVE_TIMER:
             let index = state.data.indexOf(action.payload.data);
@@ -21,11 +23,11 @@ export default function timers(state = INITIAL_STATE, action) {
                 state.data.splice(index, 1);
             }
 
-            console.log(state.data);
-
             return {
                 ...state,
-                data: state.data
+                data: state.data.sort(function(a, b) {
+                    return a - b;
+                })
             };
         default:
             return state;
