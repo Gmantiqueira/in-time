@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
     background: ${props => props.secondaryColor};
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,6 +10,10 @@ export const Container = styled.div`
     height: 100vh;
     position: relative;
     overflow: hidden;
+
+    &.paused{
+        background-color: rgba(255, 255, 255, 0.1);
+    }
 
     div {
         &.circular {

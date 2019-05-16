@@ -4,20 +4,36 @@ export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    overflow-y: visible;
+    overflow-y: auto;
+    overflow-x: visible;
 
     max-height: 240px;
     padding: 32px 0;
 
     position: relative;
+    width: 100%;
 
-    div {
+    > div {
+        display: flex;
+        justify-content: center;
         margin: 8px 0;
         overflow-y: visible;
         overflow-x: visible;
         -webkit-animation: add 0.5s linear;
         animation: add 0.5s linear;
         animation-fill-mode: forwards;
+
+        div {
+            opacity: 1;
+            left: 0;
+            transition: left 2s ease, opacity 0.5s ease;
+
+            &.deleted {
+                position: relative;
+                opacity: 0;
+                left: -300%;
+            }
+        }
 
         @-webkit-keyframes add {
             from {
@@ -36,6 +52,11 @@ export const Wrapper = styled.div`
                 min-height: 48px;
             }
         }
+    }
+
+    form{
+        display: flex;
+        justify-content: center;
     }
 
     /* width */
@@ -59,7 +80,7 @@ export const Wrapper = styled.div`
         content: "";
         width: 100%;
         height: 32px;
-        position: absolute;
+        position: fixed;
         left: 0;
     }
 
@@ -105,14 +126,6 @@ export const TimerBtn = styled.button`
     text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
 
     transition: 0.3s ease background-color;
-    transition: left 2s ease, opacity 0.5s ease;
-
-    &.deleted {
-        position: absolute;
-        opacity: 0;
-        left: -1000%;
-        transition: left 2s ease, opacity 0.5s ease;
-    }
 
     &:hover {
         background-color: ${props => props.primaryColor};

@@ -48,9 +48,8 @@ class TimerList extends Component {
         let timers = document.getElementsByClassName("timer-btn");
 
         for (let i = 0; i < timers.length; i++) {
-            console.log(value, timers[i]);
             if (value === timers[i].value) {
-                timers[i].classList.add("deleted");
+                timers[i].closest('div').classList.add("deleted");
             }
         }
 
@@ -66,23 +65,25 @@ class TimerList extends Component {
                 secondaryColor={this.props.timer.secondaryColor}
             >
                 {this.props.timerList.data.map(timer => (
-                    <div key={timer} className="relative">
-                        <TimerBtn
-                            className="timer-btn"
-                            primaryColor={this.props.timer.primaryColor}
-                            onClick={this.props.startTimer}
-                            value={timer}
-                        >
-                            {timer}
-                        </TimerBtn>
+                    <div>
+                        <div key={timer} className="relative">
+                            <TimerBtn
+                                className="timer-btn"
+                                primaryColor={this.props.timer.primaryColor}
+                                onClick={this.props.startTimer}
+                                value={timer}
+                            >
+                                {timer}
+                            </TimerBtn>
 
-                        <RemoveTimer
-                            primaryColor={this.props.timer.primaryColor}
-                            onClick={this.removeTimer}
-                            value={timer}
-                        >
-                            DELETE
-                        </RemoveTimer>
+                            <RemoveTimer
+                                primaryColor={this.props.timer.primaryColor}
+                                onClick={this.removeTimer}
+                                value={timer}
+                            >
+                                DELETE
+                            </RemoveTimer>
+                        </div>
                     </div>
                 ))}
                 <form onSubmit={this.createTimer}>

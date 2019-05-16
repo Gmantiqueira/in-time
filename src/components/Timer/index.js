@@ -20,11 +20,20 @@ class Timer extends Component {
         }).isRequired
     };
 
-    // componentDidMount() {
-    //     this.props.update();
-    // }
+    state = {
+        paused: true
+    }
 
     componentDidMount() {
+        this.setState({paused: true})
+        this.startTimer();
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.props.timer.timer);
+    }
+
+    startTimer = () => {
         let timer = setInterval(() => {
             this.props.checkNow();
             this.props.update();
@@ -36,13 +45,22 @@ class Timer extends Component {
         this.props.setTimer(timer);
     }
 
-    componentWillUnmount() {
-        clearInterval(this.props.timer.timer);
+    pauseTimer = () => {
+        if(this.state.paused === true){
+            clearInterval(this.props.timer.timer);
+            this.setState({paused: false})
+        } else {
+            this.startTimer()
+        }
+
+        let wrapper = document.getElementsByClassName('wrapper');
+        wrapper[0].classList.add('paused');
     }
 
     render() {
         return (
-            <Container
+            <Container className="wrapper"
+                onClick={this.pauseTimer}
                 circleSection={this.props.timer.circleSection}
                 barProgress={this.props.timer.barProgress}
                 aboveHalfTime={this.props.timer.aboveHalfTime}
