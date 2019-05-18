@@ -1,14 +1,15 @@
 export const Types = {
+    SESSION: "timer/SESSION",
+
     SET_TIMER: "timer/SET_TIMER",
     CHECK_RUNNING: "timer/CHECK_RUNNING",
+    RESUME_TIMER: "timer/RESUME_TIMER",
+    PAUSE_TIMER: "timer/PAUSE_TIMER",
     CHECK_NOW: "timer/CHECK_NOW",
     TOTAL: "timer/TOTAL",
     PRIMARY_COLOR: "timer/PRIMARY_COLOR",
     SECONDARY_COLOR: "timer/SECONDARY_COLOR",
-    SESSION: "timer/SESSION",
     ORIENTATION: "timer/ORIENTATION",
-
-    // teste
 
     ENDLINE: "timer/ENDLINE",
     FORMAT: "timer/FORMAT",
@@ -18,9 +19,11 @@ export const Types = {
 
 const INITIAL_STATE = {
     isRunning: false,
+    isPaused: false,
     now: "",
     endline: "",
     timeRemaining: 0,
+    timeDelay: 0,
     totalTime: 0,
     timeFormated: "",
 
@@ -42,11 +45,6 @@ export default function timer(state = INITIAL_STATE, action) {
                 ...state,
                 timer: action.payload.timer
             };
-        // case Types.RUNNING:
-        //     return {
-        //         ...state,
-        //         isRunning: action.payload.isRunning
-        //     };
         case Types.TOTAL:
             return {
                 ...state,
@@ -106,10 +104,20 @@ export default function timer(state = INITIAL_STATE, action) {
                 ...state,
                 isRunning: state.timeRemaining > 0 ? true : false
             };
+        case Types.PAUSE_TIMER:
+            return {
+                ...state,
+                isPaused: true
+            };
+        case Types.RESUME_TIMER:
+            return {
+                ...state,
+                isPaused: false
+            };
         case Types.UPDATE:
             return {
                 ...state,
-                timeRemaining: Math.round((state.endline - state.now) / 1000)
+                timeRemaining: Math.floor((state.endline - state.now) / 1000)
             };
 
         case Types.UPDATE_STYLE:
@@ -183,5 +191,11 @@ export const Creators = {
     }),
     update: () => ({
         type: Types.UPDATE
+    }),
+    pauseTimer: () => ({
+        type: Types.PAUSE_TIMER
+    }),
+    resumeTimer: () => ({
+        type: Types.RESUME_TIMER
     })
 };

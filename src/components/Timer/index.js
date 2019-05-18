@@ -21,11 +21,11 @@ class Timer extends Component {
     };
 
     state = {
-        paused: true
-    }
+        delay: 1
+    };
 
     componentDidMount() {
-        this.setState({paused: true})
+        this.setState({ paused: false });
         this.startTimer();
     }
 
@@ -35,31 +35,58 @@ class Timer extends Component {
 
     startTimer = () => {
         let timer = setInterval(() => {
-            this.props.checkNow();
-            this.props.update();
-            this.props.updateStyle();
-            this.props.is_Running();
-            this.props.format();
+            if (this.props.timer.isPaused === true) {
+                clearInterval(timer);
+            } else {
+                this.props.checkNow();
+                this.props.update();
+                this.props.updateStyle();
+                this.props.is_Running();
+                this.props.format();
+            }
         }, 1000);
 
         this.props.setTimer(timer);
-    }
+    };
 
     pauseTimer = () => {
-        if(this.state.paused === true){
-            clearInterval(this.props.timer.timer);
-            this.setState({paused: false})
+        if (this.props.timer.isPaused === false) {
+            this.props.pauseTimer();
         } else {
-            this.startTimer()
+            this.props.resumeTimer();
+            this.startTimer();
+            this.setState({ delay: 1 });
         }
 
-        let wrapper = document.getElementsByClassName('wrapper');
-        wrapper[0].classList.add('paused');
-    }
+        var delay = this.state.delay;
+
+        let pauseDelay = setInterval(() => {
+            if (this.props.timer.isPaused === false) {
+                clearInterval(pauseDelay);
+            } else {
+                delay++;
+                this.setState({ delay: delay });
+            }
+        }, 1000);
+
+        let endline = this.props.timer.endline;
+        console.log("");
+        console.log("delay:" + this.state.delay);
+        console.log("segundos do fim:" + endline.getSeconds());
+        console.log("fim:" + endline);
+        console.log("agora:" + Date());
+        endline.setSeconds(endline.getSeconds() + this.state.delay);
+        this.props.setEndline(endline);
+        console.log(endline);
+
+        let wrapper = document.getElementsByClassName("wrapper");
+        wrapper[0].classList.add("paused");
+    };
 
     render() {
         return (
-            <Container className="wrapper"
+            <Container
+                className="wrapper"
                 onClick={this.pauseTimer}
                 circleSection={this.props.timer.circleSection}
                 barProgress={this.props.timer.barProgress}
