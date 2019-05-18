@@ -1,7 +1,6 @@
 export const Types = {
     SESSION: "timer/SESSION",
 
-    SET_TIMER: "timer/SET_TIMER",
     CHECK_RUNNING: "timer/CHECK_RUNNING",
     RESUME_TIMER: "timer/RESUME_TIMER",
     PAUSE_TIMER: "timer/PAUSE_TIMER",
@@ -31,8 +30,8 @@ const INITIAL_STATE = {
     circleSection: null,
     barProgress: "100%",
 
-    primaryColor: "#f71963",
-    secondaryColor: "hsl(340, 20%, 20%)",
+    primaryColor: "#2463D0",
+    secondaryColor: "hsl(217, 20%, 20%)",
 
     sessionName: "",
     orientation: "vertical"
@@ -40,11 +39,6 @@ const INITIAL_STATE = {
 
 export default function timer(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case Types.SET_TIMER:
-            return {
-                ...state,
-                timer: action.payload.timer
-            };
         case Types.TOTAL:
             return {
                 ...state,
@@ -117,7 +111,7 @@ export default function timer(state = INITIAL_STATE, action) {
         case Types.UPDATE:
             return {
                 ...state,
-                timeRemaining: Math.floor((state.endline - state.now) / 1000)
+                timeRemaining: Math.round((state.endline - state.now) / 1000)
             };
 
         case Types.UPDATE_STYLE:
@@ -149,10 +143,6 @@ export default function timer(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
-    setTimer: timer => ({
-        type: Types.SET_TIMER,
-        payload: { timer }
-    }),
     is_Running: () => ({
         type: Types.CHECK_RUNNING
     }),

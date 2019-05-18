@@ -97,7 +97,6 @@ export const Container = styled.div`
         flex-direction: column;
         position: relative;
         span {
-            font-family: Circular Std;
             font-weight: 500;
             font-size: 384px;
             line-height: 340px;
@@ -120,7 +119,6 @@ export const Container = styled.div`
                 border: none;
                 color: #ffffff;
                 display: block;
-                font-family: Circular;
                 font-size: 20px;
                 line-height: 29px;
                 letter-spacing: 0.3em;

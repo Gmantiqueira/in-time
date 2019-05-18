@@ -49,7 +49,7 @@ class TimerList extends Component {
 
         for (let i = 0; i < timers.length; i++) {
             if (value === timers[i].value) {
-                timers[i].closest('div').classList.add("deleted");
+                timers[i].closest("div").classList.add("deleted");
             }
         }
 
@@ -77,6 +77,7 @@ class TimerList extends Component {
                             </TimerBtn>
 
                             <RemoveTimer
+                                className="remove-btn"
                                 primaryColor={this.props.timer.primaryColor}
                                 onClick={this.removeTimer}
                                 value={timer}

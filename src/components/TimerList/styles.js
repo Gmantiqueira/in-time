@@ -27,6 +27,12 @@ export const Wrapper = styled.div`
             opacity: 1;
             left: 0;
             transition: left 2s ease, opacity 0.5s ease;
+            &:hover {
+                .remove-btn {
+                    opacity: 0.4;
+                    pointer-events: auto;
+                }
+            }
 
             &.deleted {
                 position: relative;
@@ -54,7 +60,7 @@ export const Wrapper = styled.div`
         }
     }
 
-    form{
+    form {
         display: flex;
         justify-content: center;
     }
@@ -174,8 +180,9 @@ export const RemoveTimer = styled.button`
     border: none;
     outline: none;
 
-    left: calc(100% + 48px);
+    left: 100%;
     top: 0;
+    padding: 0 48px;
 
     font-size: 16px;
     line-height: 23px;
@@ -183,5 +190,12 @@ export const RemoveTimer = styled.button`
     letter-spacing: 0.3em;
 
     color: #ffffff;
-    opacity: 0.4;
+    opacity: 0;
+    pointer-events: none;
+    transition: all ease 0.2s;
+    &:hover {
+        opacity: 1 !important;
+        pointer-events: auto;
+        transition: all ease 0.2s;
+    }
 `;

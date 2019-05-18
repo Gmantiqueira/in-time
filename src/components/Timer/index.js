@@ -45,8 +45,6 @@ class Timer extends Component {
                 this.props.format();
             }
         }, 1000);
-
-        this.props.setTimer(timer);
     };
 
     pauseResumeTimer = () => {
@@ -61,9 +59,8 @@ class Timer extends Component {
                 } else {
                     delay += 1;
                     this.setState({ delay: delay });
-                    console.log(delay);
                 }
-            }, 1);
+            }, 10);
         } else if (this.props.timer.isPaused === true) {
             let endline = this.props.timer.endline;
 
