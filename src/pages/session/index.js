@@ -32,6 +32,7 @@ class Session extends Component {
         this.props.setTotalTime(e.target.value * 60);
         this.props.setEndline(endline);
 
+        this.props.resumeTimer();
         this.props.checkNow();
         this.props.update();
         this.props.updateStyle();
