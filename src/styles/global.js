@@ -1,10 +1,13 @@
 import { createGlobalStyle } from "styled-components";
 
-const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle `
     @font-face {
         font-family: 'Circular';
         src: url('../assets/fonts/CircularStd-Book.eot');
-        src: url('../assets/fonts/CircularStd-Book.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/CircularStd-Book.woff') format('woff'), url('../assets/fonts/CircularStd-Book.ttf') format('truetype'), url('../assets/fonts/CircularStd-Book.svg#bcc26993292869431e54c666aafa8fcd') format('svg');
+        src: url('../assets/fonts/CircularStd-Book.eot?#iefix') format('embedded-opentype'),
+        url('../assets/fonts/CircularStd-Book.woff') format('woff'),
+        url('../assets/fonts/CircularStd-Book.ttf') format('truetype'),
+        url('../assets/fonts/CircularStd-Book.svg#bcc26993292869431e54c666aafa8fcd') format('svg');
         font-weight: 400;
         font-style: normal;
     }

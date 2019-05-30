@@ -65,7 +65,7 @@ class TimerList extends Component {
                 secondaryColor={this.props.timer.secondaryColor}
             >
                 {this.props.timerList.data.map(timer => (
-                    <div>
+                    <div key={timer}>
                         <div key={timer} className="relative">
                             <TimerBtn
                                 className="timer-btn"

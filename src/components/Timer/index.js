@@ -53,21 +53,25 @@ class Timer extends Component {
         if (this.props.timer.isPaused === false) {
             this.props.pauseTimer();
 
-            var delay = this.state.delay;
+            timer[0].classList.add("paused");
+            var pausedNow = new Date();
 
             let pauseDelay = setInterval(() => {
                 if (this.props.timer.isPaused === false) {
                     clearInterval(pauseDelay);
                 } else {
-                    delay += 1;
+                    var delay = Date.now();
+                    delay = delay - pausedNow;
+
                     this.setState({ delay: delay });
                 }
-            }, 10);
+            }, 1);
         } else if (this.props.timer.isPaused === true) {
             let endline = this.props.timer.endline;
+            timer[0].classList.remove("paused");
 
             endline.setMilliseconds(
-                endline.getMilliseconds() + this.state.delay * 10
+                endline.getMilliseconds() + this.state.delay
             );
             this.props.setEndline(endline);
 
@@ -76,8 +80,6 @@ class Timer extends Component {
             this.setState({ delay: 0 });
         }
 
-        let timer = document.getElementsByClassName("timer");
-        timer[0].classList.toggle("paused");
     };
 
     stopTimer = e => {
@@ -96,24 +98,22 @@ class Timer extends Component {
 
     render() {
         return (
-            <Container
-                className="timer"
-                onClick={this.pauseResumeTimer}
-                circleSection={this.props.timer.circleSection}
-                barProgress={this.props.timer.barProgress}
-                aboveHalfTime={this.props.timer.aboveHalfTime}
-                orientation={this.props.timer.orientation}
-                primaryColor={this.props.timer.primaryColor}
-                secondaryColor={this.props.timer.secondaryColor}
-            >
+            <Container className = "timer"
+            onClick = { this.pauseResumeTimer }
+            circleSection = { this.props.timer.circleSection }
+            barProgress = { this.props.timer.barProgress }
+            aboveHalfTime = { this.props.timer.aboveHalfTime }
+            orientation = { this.props.timer.orientation }
+            primaryColor = { this.props.timer.primaryColor }
+            secondaryColor = { this.props.timer.secondaryColor } >
                 <div>
-                    <span>{this.props.timer.timeFormated}</span>
+                    <span> { this.props.timer.timeFormated } </span>
                     <div>
-                        <button onClick={this.pauseResumeTimer}>RESUME</button>
-                        <button onClick={this.stopTimer}>STOP</button>
+                        <button onClick = { this.pauseResumeTimer } > RESUME </button>
+                        <button onClick = { this.stopTimer } > STOP </button>
                     </div>
                 </div>
-                <div className={this.props.timer.orientation} />
+            <div className = { this.props.timer.orientation }/>
             </Container>
         );
     }
