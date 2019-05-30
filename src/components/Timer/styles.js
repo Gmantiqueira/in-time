@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { lighten } from "polished";
 
 export const Container = styled.div`
     background: ${props => props.secondaryColor};
@@ -63,14 +64,23 @@ export const Container = styled.div`
                     ? `
                 linear-gradient(${
                     props.circleSection
-                }deg, transparent 50%, rgba(255, 255, 255, 0.1) 50%),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 50%, transparent 50%);
+                }deg, transparent 50%, ${lighten(
+                          0.5,
+                          props.secondaryColor
+                      )} 50%),
+                linear-gradient(90deg, ${lighten(
+                    0.5,
+                    props.secondaryColor
+                )} 50%, transparent 50%);
             `
                     : `
                 linear-gradient(${props.circleSection}deg, transparent 50%, ${
                           props.secondaryColor
                       } 50%),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 50%, transparent 50%);
+                linear-gradient(90deg, ${lighten(
+                    0.5,
+                    props.secondaryColor
+                )} 50%, transparent 50%);
             `};
         }
         > div {

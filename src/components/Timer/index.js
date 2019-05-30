@@ -47,7 +47,9 @@ class Timer extends Component {
         }, 1000);
     };
 
-    pauseResumeTimer = () => {
+    pauseResumeTimer = e => {
+        e.preventDefault();
+
         if (this.props.timer.isPaused === false) {
             this.props.pauseTimer();
 
@@ -78,7 +80,9 @@ class Timer extends Component {
         timer[0].classList.toggle("paused");
     };
 
-    stopTimer = () => {
+    stopTimer = e => {
+        e.preventDefault();
+
         this.props.setTotalTime(0);
         this.props.setEndline(Date.now);
 
