@@ -9,8 +9,8 @@ import User from "../pages/user";
 const Routes = () => (
     <Switch>
         <Route exact path="/" component={Login} />
-        <Route path="/session" component={Session} />
-        <Route path="/user" component={User} />
+        <Route exact path="/:session" component={Session} />
+        <Route exact path="/:session/user" component={User} />
     </Switch>
 );
 

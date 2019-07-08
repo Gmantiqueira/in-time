@@ -7,25 +7,24 @@ import { Creators as TimerActions } from "../../store/ducks/timer";
 import { Container, Title, Form } from "./styles";
 
 class Login extends Component {
-
     state = {
-        username: ''
-    }
+        session: ""
+    };
 
     handleInputChange = e => {
-        this.setState({ username: e.target.value });
+        this.setState({ session: e.target.value });
     };
 
     handleSubmit = e => {
         e.preventDefault();
 
-        const { username } = this.state;
+        const { session } = this.state;
 
-        if (!username.length) return;
+        if (!session.length) return;
 
-        localStorage.setItem("@InTime:username", username);
+        localStorage.setItem("@InTime:username", session);
 
-        this.props.history.push("/session");
+        this.props.history.push("/" + session);
     };
 
     render() {
@@ -35,11 +34,14 @@ class Login extends Component {
                     <h3>In Time</h3>
                 </Title>
 
-                <Form primaryColor={this.props.timer.primaryColor} onSubmit={this.handleSubmit}>
+                <Form
+                    primaryColor={this.props.timer.primaryColor}
+                    onSubmit={this.handleSubmit}
+                >
                     <label>Insira seu nome de usuário</label>
                     <input
                         type="text"
-                        value={this.state.username}
+                        value={this.state.session}
                         onChange={this.handleInputChange}
                     />
                 </Form>

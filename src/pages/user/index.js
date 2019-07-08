@@ -166,7 +166,7 @@ class User extends Component {
                     </FormRow>
                 </FormList>
 
-                <Nav />
+                <Nav location={this.props.location} />
             </Container>
         );
     }

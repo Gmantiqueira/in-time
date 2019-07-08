@@ -44,12 +44,12 @@ class Session extends Component {
         return this.props.timer.isRunning === false ? (
             <Container secondaryColor={this.props.timer.secondaryColor}>
                 <TimerList startTimer={this.handleStartTimer} />
-                <Nav />
+                <Nav location={this.props.location} />
             </Container>
         ) : (
             <Container>
                 <Timer />
-                <Nav />
+                <Nav location={this.props.location} />
             </Container>
         );
     }
