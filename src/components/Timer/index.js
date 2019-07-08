@@ -49,6 +49,7 @@ class Timer extends Component {
 
     pauseResumeTimer = e => {
         e.preventDefault();
+        var timer = document.getElementsByClassName("timer");
 
         if (this.props.timer.isPaused === false) {
             this.props.pauseTimer();
@@ -79,7 +80,6 @@ class Timer extends Component {
             this.startTimer();
             this.setState({ delay: 0 });
         }
-
     };
 
     stopTimer = e => {
@@ -98,22 +98,27 @@ class Timer extends Component {
 
     render() {
         return (
-            <Container className = "timer"
-            onClick = { this.pauseResumeTimer }
-            circleSection = { this.props.timer.circleSection }
-            barProgress = { this.props.timer.barProgress }
-            aboveHalfTime = { this.props.timer.aboveHalfTime }
-            orientation = { this.props.timer.orientation }
-            primaryColor = { this.props.timer.primaryColor }
-            secondaryColor = { this.props.timer.secondaryColor } >
+            <Container
+                className="timer"
+                onClick={this.pauseResumeTimer}
+                circleSection={this.props.timer.circleSection}
+                barProgress={this.props.timer.barProgress}
+                aboveHalfTime={this.props.timer.aboveHalfTime}
+                orientation={this.props.timer.orientation}
+                primaryColor={this.props.timer.primaryColor}
+                secondaryColor={this.props.timer.secondaryColor}
+            >
                 <div>
-                    <span> { this.props.timer.timeFormated } </span>
+                    <span> {this.props.timer.timeFormated} </span>
                     <div>
-                        <button onClick = { this.pauseResumeTimer } > RESUME </button>
-                        <button onClick = { this.stopTimer } > STOP </button>
+                        <button onClick={this.pauseResumeTimer}>
+                            {" "}
+                            RESUME{" "}
+                        </button>
+                        <button onClick={this.stopTimer}> STOP </button>
                     </div>
                 </div>
-            <div className = { this.props.timer.orientation }/>
+                <div className={this.props.timer.orientation} />
             </Container>
         );
     }
