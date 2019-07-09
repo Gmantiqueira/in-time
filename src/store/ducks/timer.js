@@ -1,5 +1,6 @@
 export const Types = {
     SESSION: "timer/SESSION",
+    SESSIONID: "timer/SESSIONID",
 
     CHECK_RUNNING: "timer/CHECK_RUNNING",
     RESUME_TIMER: "timer/RESUME_TIMER",
@@ -32,9 +33,10 @@ const INITIAL_STATE = {
 
     primaryColor: "#2463D0",
     secondaryColor: "hsl(217, 20%, 20%)",
+    orientation: "vertical",
 
     sessionName: "",
-    orientation: "vertical"
+    sessionID: ""
 };
 
 export default function timer(state = INITIAL_STATE, action) {
@@ -57,7 +59,13 @@ export default function timer(state = INITIAL_STATE, action) {
         case Types.SESSION:
             return {
                 ...state,
-                sessionName: action.payload.sessionName
+                sessionName: action.payload.sessionName,
+                sessionID: action.payload.sessionID
+            };
+        case Types.SESSIONID:
+            return {
+                ...state,
+                sessionID: action.payload.sessionID
             };
         case Types.ORIENTATION:
             return {
@@ -147,6 +155,10 @@ export const Creators = {
     setSession: sessionName => ({
         type: Types.SESSION,
         payload: { sessionName }
+    }),
+    setSessionID: sessionID => ({
+        type: Types.SESSIONID,
+        payload: { sessionID }
     }),
     is_Running: () => ({
         type: Types.CHECK_RUNNING
