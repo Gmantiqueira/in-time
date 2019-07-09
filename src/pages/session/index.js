@@ -12,20 +12,8 @@ import TimerList from "../../components/TimerList";
 import Nav from "../../components/Nav";
 
 class Session extends Component {
-    static propTypes = {
-        timer: PropTypes.shape({
-            currentTime: PropTypes.number,
-            currentTimeFormated: PropTypes.string,
-            isRunning: PropTypes.bool,
-            totalTime: PropTypes.number,
-            aboveHalfTime: PropTypes.bool,
-            circleSection: PropTypes.number,
-            barProgress: PropTypes.string
-        }).isRequired
-    };
-
     state = {
-        timer: []
+        timer: ""
     };
 
     infoGet = async e => {
@@ -64,12 +52,15 @@ class Session extends Component {
     render() {
         return this.props.timer.isRunning === false ? (
             <Container secondaryColor={this.props.timer.secondaryColor}>
-                <TimerList startTimer={this.handleStartTimer} />
+                <TimerList
+                    location={this.props.location}
+                    startTimer={this.handleStartTimer}
+                />
                 <Nav location={this.props.location} />
             </Container>
         ) : (
             <Container>
-                <Timer />
+                <Timer timer={this.state.timer} />
                 <Nav location={this.props.location} />
             </Container>
         );
