@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import api from "../../services/api";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -22,6 +23,26 @@ class Session extends Component {
             barProgress: PropTypes.string
         }).isRequired
     };
+
+    state = {
+        timer: []
+    };
+
+    infoGet = async e => {
+        await this.props.setSession(this.props.location.pathname.split("/")[1]);
+
+        const { data: timer } = await api.get(
+            "/session/" + this.props.timer.sessionName
+        );
+
+        this.setState({
+            timer: timer
+        });
+    };
+
+    componentDidMount() {
+        this.infoGet();
+    }
 
     handleStartTimer = e => {
         let end = new Date();

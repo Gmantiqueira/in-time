@@ -23,6 +23,10 @@ class User extends Component {
         changeOrientation: PropTypes.func.isRequired
     };
 
+    componentDidMount() {
+        this.props.setSession(this.props.location.pathname.split("/")[1]);
+    }
+
     toSecondaryColor = hex => {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 

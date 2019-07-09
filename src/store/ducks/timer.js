@@ -109,7 +109,7 @@ export default function timer(state = INITIAL_STATE, action) {
                 isPaused: false
             };
         case Types.UPDATE:
-            console.log(state.endline, state.now)
+            console.log(state.endline, state.now);
             return {
                 ...state,
                 timeRemaining: Math.round((state.endline - state.now) / 1000)
@@ -144,6 +144,10 @@ export default function timer(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
+    setSession: sessionName => ({
+        type: Types.SESSION,
+        payload: { sessionName }
+    }),
     is_Running: () => ({
         type: Types.CHECK_RUNNING
     }),
