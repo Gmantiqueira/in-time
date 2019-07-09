@@ -1,41 +1,61 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import api from "../../services/api";
+import io from "socket.io-client";
+
 // import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Creators as TimerListActions } from "../../store/ducks/timerList";
+import { Creators as TimerActions } from "../../store/ducks/timer";
 
 import { Wrapper, TimerBtn, AddTimer, RemoveTimer } from "./styles";
 
 class TimerList extends Component {
-    static propTypes = {
-        timer: PropTypes.shape({
-            currentTime: PropTypes.string,
-            isRunning: PropTypes.bool,
-            totalTime: PropTypes.number,
-            aboveHalfTime: PropTypes.bool,
-            circleSection: PropTypes.number,
-            barProgress: PropTypes.string
-        }).isRequired,
-        addTimer: PropTypes.func.isRequired,
-        timerList: PropTypes.shape({
-            data: PropTypes.arrayOf(
-                PropTypes.shape({
-                    value: PropTypes.number
-                })
-            )
-        }).isRequired
-    };
-
     state = {
-        timerInput: ""
+        timerInput: "",
+        timerList: []
     };
 
-    createTimer = e => {
+    getTimerList = async e => {
+        await this.props.setSession(this.props.location.pathname.split("/")[1]);
+
+        const { data: timer } = await api.get(
+            "/session/" + this.props.timer.sessionName
+        );
+
+        await this.props.setSessionID(timer._id);
+
+        await this.setState({
+            timerList: timer.timerList
+        });
+    };
+
+    componentDidMount() {
+        this.registerToSocket();
+        this.getTimerList();
+    }
+
+    registerToSocket = () => {
+        const socket = io("http://localhost:3000");
+
+        socket.on("addTimer", timer => {
+            this.setState({ timerList: timer.timerList });
+        });
+
+        socket.on("removeTimer", timer => {
+            this.setState({ timerList: timer.timerList });
+        });
+    };
+
+    createTimer = async e => {
         e.preventDefault();
 
-        this.props.addTimer(Number(this.state.timerInput));
+        await api.post(
+            "/session/" +
+                this.props.timer.sessionID +
+                "/timerlist/" +
+                this.state.timerInput
+        );
 
         this.setState({ timerInput: "" });
     };
@@ -44,17 +64,17 @@ class TimerList extends Component {
         e.preventDefault();
 
         let value = e.target.value;
-
         let timers = document.getElementsByClassName("timer-btn");
-
         for (let i = 0; i < timers.length; i++) {
             if (value === timers[i].value) {
                 timers[i].closest("div").classList.add("deleted");
             }
         }
 
-        setTimeout(() => {
-            this.props.removeTimer(Number(value));
+        setTimeout(async e => {
+            await api.delete(
+                "/session/" + this.props.timer.sessionID + "/timerlist/" + value
+            );
         }, 600);
     };
 
@@ -64,7 +84,7 @@ class TimerList extends Component {
                 primaryColor={this.props.timer.primaryColor}
                 secondaryColor={this.props.timer.secondaryColor}
             >
-                {this.props.timerList.data.map(timer => (
+                {this.state.timerList.map(timer => (
                     <div key={timer}>
                         <div key={timer} className="relative">
                             <TimerBtn
@@ -108,7 +128,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(TimerListActions, dispatch);
+    bindActionCreators(TimerActions, dispatch);
 
 export default connect(
     mapStateToProps,
