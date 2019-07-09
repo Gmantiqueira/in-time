@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import api from "../../services/api";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -8,20 +8,21 @@ import { Creators as TimerActions } from "../../store/ducks/timer";
 import { Container } from "./styles";
 
 class Timer extends Component {
-    static propTypes = {
-        timer: PropTypes.shape({
-            currentTime: PropTypes.number,
-            currentTimeFormated: PropTypes.string,
-            isRunning: PropTypes.bool,
-            totalTime: PropTypes.number,
-            aboveHalfTime: PropTypes.bool,
-            circleSection: PropTypes.number,
-            barProgress: PropTypes.string
-        }).isRequired
+    state = {
+        delay: 0,
+        timer: []
     };
 
-    state = {
-        delay: 0
+    getTimer = async e => {
+        await this.props.setSession(this.props.location.pathname.split("/")[1]);
+
+        const { data: timer } = await api.get(
+            "/session/" + this.props.timer.sessionName
+        );
+
+        this.setState({
+            timer: timer
+        });
     };
 
     componentDidMount() {
