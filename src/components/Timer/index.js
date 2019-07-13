@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import api from "../../services/api";
+import io from "socket.io-client";
+import moment from 'moment'
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -9,91 +11,97 @@ import { Container } from "./styles";
 
 class Timer extends Component {
     state = {
-        delay: 0,
-        timer: []
+        timer: [],
+        timeFormated: '',
     };
 
-    getTimer = async e => {
-        await this.props.setSession(this.props.location.pathname.split("/")[1]);
+    intervalID = 0
 
-        const { data: timer } = await api.get(
-            "/session/" + this.props.timer.sessionName
-        );
+    registerToSocket = () => {
+        const socket = io("http://localhost:3000");
 
-        this.setState({
-            timer: timer
+        socket.on("resumeTimer" , (timer) => {
+            this.startTimer();
+        });
+        socket.on("stopTimer" , (timer) => {
+            clearInterval(this.intervalID)
         });
     };
 
     componentDidMount() {
-        this.props.resumeTimer();
+        this.registerToSocket()
         this.startTimer();
     }
 
     componentWillUnmount() {
-        clearInterval(this.props.timer.timer);
+        clearInterval(this.intervalID);
     }
 
     startTimer = () => {
-        let timer = setInterval(() => {
-            if (this.props.timer.isPaused === true) {
-                clearInterval(timer);
+        this.intervalID = setInterval(async e => {
+            if (this.props.timerInfo.isPaused || !this.props.timerInfo.isRunning) {
+                clearInterval(this.intervalID);
             } else {
-                this.props.checkNow();
-                this.props.update();
+                var endline = moment(this.props.timerInfo.endline);
+
+                var difference = moment(endline).diff(moment.utc().local().format())
+
+                var timeRemaining = Math.floor(difference / 1000)
+
+                this.props.setTotal(this.props.timerInfo.totalTime * 60);
+                this.props.setRemaining(timeRemaining);
                 this.props.updateStyle();
-                this.props.is_Running();
-                this.props.format();
+
+                let time = timeRemaining;
+
+                let minutes = Math.floor((time % (60 * 60)) / 60);
+                let seconds = Math.floor(time % 60);
+
+                if (seconds < 10) {
+                    seconds = "0" + seconds;
+                }
+                let format = minutes + ":" + seconds;
+
+                this.setState({timeFormated: format})
+
+                if(time <= 0){
+                    await api.put(
+                        "/session/" + this.props.timer.sessionID + "/update",
+                    );
+                    await clearInterval(this.intervalID);
+                }
             }
-        }, 1000);
+        }, 100);
     };
 
-    pauseResumeTimer = e => {
+    pauseResumeTimer = async e => {
         e.preventDefault();
-        var timer = document.getElementsByClassName("timer");
-
-        if (this.props.timer.isPaused === false) {
-            this.props.pauseTimer();
-
-            timer[0].classList.add("paused");
-            var pausedNow = new Date();
-
-            let pauseDelay = setInterval(() => {
-                if (this.props.timer.isPaused === false) {
-                    clearInterval(pauseDelay);
-                } else {
-                    var delay = Date.now();
-                    delay = delay - pausedNow;
-
-                    this.setState({ delay: delay });
-                }
-            }, 1);
-        } else if (this.props.timer.isPaused === true) {
-            let endline = this.props.timer.endline;
-            timer[0].classList.remove("paused");
-
-            endline.setMilliseconds(
-                endline.getMilliseconds() + this.state.delay
+        if (!this.props.timerInfo.isPaused) {
+            await api.put(
+                "/session/" +
+                    this.props.timer.sessionID +
+                    "/pause"
             );
-            this.props.setEndline(endline);
+        } else {
+            await api.put(
+                "/session/" +
+                    this.props.timer.sessionID +
+                    "/resume"
+            );
 
-            this.props.resumeTimer();
             this.startTimer();
-            this.setState({ delay: 0 });
         }
     };
 
     stopTimer = e => {
         e.preventDefault();
 
-        this.props.setTotalTime(0);
-        this.props.setEndline(Date.now);
+        // this.props.setTotalTime(0);
+        // this.props.setEndline(Date.now);
 
-        this.props.is_Running();
-        this.props.checkNow();
-        this.props.update();
+        // this.props.is_Running();
+        this.setState({timeRemaining: Math.round((this.props.timer.endline - Date.now) / 1000)})
         this.props.updateStyle();
-        this.props.is_Running();
         clearInterval(this.props.timer.timer);
     };
 
@@ -110,7 +118,7 @@ class Timer extends Component {
                 secondaryColor={this.props.timer.secondaryColor}
             >
                 <div>
-                    <span> {this.props.timer.timeFormated} </span>
+                    <span> {this.state.timeFormated} </span>
                     <div>
                         <button onClick={this.pauseResumeTimer}>
                             {" "}

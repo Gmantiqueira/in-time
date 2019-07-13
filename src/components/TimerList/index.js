@@ -13,39 +13,54 @@ import { Wrapper, TimerBtn, AddTimer, RemoveTimer } from "./styles";
 class TimerList extends Component {
     state = {
         timerInput: "",
-        timerList: []
+        timerList: [],
+        valueDeleted: null
     };
 
-    getTimerList = async e => {
-        await this.props.setSession(this.props.location.pathname.split("/")[1]);
-
+    getTimerlist = async e => {
         const { data: timer } = await api.get(
             "/session/" + this.props.timer.sessionName
         );
-
-        await this.props.setSessionID(timer._id);
 
         await this.setState({
             timerList: timer.timerList
         });
     };
 
-    componentDidMount() {
-        this.registerToSocket();
-        this.getTimerList();
-    }
-
     registerToSocket = () => {
         const socket = io("http://localhost:3000");
 
-        socket.on("addTimer", timer => {
-            this.setState({ timerList: timer.timerList });
+        socket.on("addTimer", timerList => {
+            this.setState({ timerList: timerList });
         });
 
-        socket.on("removeTimer", timer => {
-            this.setState({ timerList: timer.timerList });
+
+        socket.on("removeTimer", async (timerList) => {
+            var previousTimerlist = this.state.timerList
+
+            let value = previousTimerlist.filter(x => !timerList.includes(x));
+            value = String(value[0])
+
+            console.log(value)
+
+            let timers = document.getElementsByClassName("timer-btn");
+
+            for (let i = 0; i < timers.length; i++) {
+                if (value === timers[i].value) {
+                    timers[i].closest("div").classList.add("deleted");
+                }
+            }
+
+            setTimeout(async e => {
+                this.setState({ timerList: timerList });
+            }, 600);
         });
     };
+
+    componentDidMount() {
+        this.registerToSocket();
+        this.getTimerlist();
+    }
 
     createTimer = async e => {
         e.preventDefault();
@@ -60,22 +75,15 @@ class TimerList extends Component {
         this.setState({ timerInput: "" });
     };
 
-    removeTimer = e => {
+    removeTimer = async e => {
         e.preventDefault();
+        e.persist()
 
-        let value = e.target.value;
-        let timers = document.getElementsByClassName("timer-btn");
-        for (let i = 0; i < timers.length; i++) {
-            if (value === timers[i].value) {
-                timers[i].closest("div").classList.add("deleted");
-            }
-        }
+        await this.setState({valueDeleted: e.target.value}) ;
 
-        setTimeout(async e => {
-            await api.delete(
-                "/session/" + this.props.timer.sessionID + "/timerlist/" + value
-            );
-        }, 600);
+        await api.delete(
+            "/session/" + this.props.timer.sessionID + "/timerlist/" + e.target.value
+        );
     };
 
     render() {
@@ -83,6 +91,7 @@ class TimerList extends Component {
             <Wrapper
                 primaryColor={this.props.timer.primaryColor}
                 secondaryColor={this.props.timer.secondaryColor}
+                timerList={this.props.timerList}
             >
                 {this.state.timerList.map(timer => (
                     <div key={timer}>

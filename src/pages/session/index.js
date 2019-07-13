@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import api from "../../services/api";
+import io from "socket.io-client";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -13,8 +13,11 @@ import Nav from "../../components/Nav";
 
 class Session extends Component {
     state = {
-        timer: ""
+        timer: [],
+        timerList: []
     };
+
+    intervalID = 0
 
     infoGet = async e => {
         await this.props.setSession(this.props.location.pathname.split("/")[1]);
@@ -23,44 +26,84 @@ class Session extends Component {
             "/session/" + this.props.timer.sessionName
         );
 
-        this.setState({
+        await this.props.setSessionID(timer._id);
+
+        if(timer.isPaused){
+            await api.put(
+                "/session/" +
+                    this.props.timer.sessionID +
+                    "/resume"
+            );
+        }
+
+        await this.setState({
             timer: timer
+        });
+
+    };
+
+    registerToSocket = () => {
+        const socket = io("http://localhost:3000");
+
+        socket.on("setTimer" , async (timer) => {
+            await this.setState({ timer: timer });
+        });
+
+        socket.on("pauseTimer" , async (timer) => {
+            var elem = document.getElementsByClassName('timer')
+            await this.setState({ timer: timer });
+            if(elem[0]){
+                elem[0].classList.add("paused");
+            }
+        });
+
+        socket.on("resumeTimer" , async (timer) => {
+            var elem = document.getElementsByClassName('timer')
+            await this.setState({ timer: timer });
+            if(elem[0]){
+                elem[0].classList.remove("paused");
+            }
+        });
+
+        socket.on("updateTimer" , async (timer) => {
+            this.setState({ timer: timer });
+        });
+
+        socket.on("stopTimer" , async (timer) => {
+            this.setState({ timer: timer });
         });
     };
 
-    componentDidMount() {
+    componentWillMount() {
+        this.registerToSocket()
         this.infoGet();
     }
 
-    handleStartTimer = e => {
-        let end = new Date();
-        end.setMinutes(end.getMinutes() + Number(e.target.value));
+    handleStartTimer = async e => {
+        e.persist()
 
-        let endline = end;
+        await api.put(
+            "/session/" + this.props.timer.sessionID + "/set", {
+                "totalTime": e.target.value
+            }
+        );
 
-        this.props.setTotalTime(e.target.value * 60);
-        this.props.setEndline(endline);
-
-        this.props.resumeTimer();
-        this.props.checkNow();
-        this.props.update();
         this.props.updateStyle();
-        this.props.is_Running();
-        this.props.format();
     };
 
     render() {
-        return this.props.timer.isRunning === false ? (
+        return this.state.timer.isRunning === false ? (
             <Container secondaryColor={this.props.timer.secondaryColor}>
                 <TimerList
                     location={this.props.location}
                     startTimer={this.handleStartTimer}
+                    timerList={this.state.timer}
                 />
                 <Nav location={this.props.location} />
             </Container>
         ) : (
             <Container>
-                <Timer timer={this.state.timer} />
+                <Timer location={this.props.location} timerInfo={this.state.timer} />
                 <Nav location={this.props.location} />
             </Container>
         );
