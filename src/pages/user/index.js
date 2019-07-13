@@ -12,18 +12,9 @@ import Nav from "../../components/Nav";
 import Photo from "../../assets/images/photo.jpg";
 
 class User extends Component {
-    static propTypes = {
-        timer: PropTypes.shape({
-            primaryColor: PropTypes.string,
-            secondaryColor: PropTypes.string
-        }).isRequired,
-        changePrimary: PropTypes.func.isRequired,
-        changeSecondary: PropTypes.func.isRequired,
-        changeSession: PropTypes.func.isRequired,
-        changeOrientation: PropTypes.func.isRequired
-    };
 
     componentDidMount() {
+        console.log(this)
         this.props.setSession(this.props.location.pathname.split("/")[1]);
     }
 
@@ -90,10 +81,10 @@ class User extends Component {
     };
 
     componentWillUnmount() {
-        this.props.checkNow();
-        this.props.update();
+        // this.props.checkNow();
+        // this.props.update();
         this.props.updateStyle();
-        this.props.format();
+        // this.props.format();
     }
 
     render() {

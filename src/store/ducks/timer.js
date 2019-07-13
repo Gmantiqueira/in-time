@@ -2,30 +2,18 @@ export const Types = {
     SESSION: "timer/SESSION",
     SESSIONID: "timer/SESSIONID",
 
-    CHECK_RUNNING: "timer/CHECK_RUNNING",
-    RESUME_TIMER: "timer/RESUME_TIMER",
-    PAUSE_TIMER: "timer/PAUSE_TIMER",
-    CHECK_NOW: "timer/CHECK_NOW",
-    TOTAL: "timer/TOTAL",
     PRIMARY_COLOR: "timer/PRIMARY_COLOR",
     SECONDARY_COLOR: "timer/SECONDARY_COLOR",
     ORIENTATION: "timer/ORIENTATION",
 
-    ENDLINE: "timer/ENDLINE",
-    FORMAT: "timer/FORMAT",
-    UPDATE: "timer/UPDATE",
+    REMAINING: "timer/REMAINING",
+    TOTAL: "timer/TOTAL",
     UPDATE_STYLE: "timer/UPDATE_STYLE"
 };
 
 const INITIAL_STATE = {
-    isRunning: false,
-    isPaused: false,
-    now: "",
-    endline: "",
-    timeRemaining: 0,
-    timeDelay: 0,
     totalTime: 0,
-    timeFormated: "",
+    timeRemaining: 0,
 
     aboveHalfTime: true,
     circleSection: null,
@@ -33,7 +21,7 @@ const INITIAL_STATE = {
 
     primaryColor: "#2463D0",
     secondaryColor: "hsl(217, 20%, 20%)",
-    orientation: "vertical",
+    orientation: "circular",
 
     sessionName: "",
     sessionID: ""
@@ -41,11 +29,6 @@ const INITIAL_STATE = {
 
 export default function timer(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case Types.TOTAL:
-            return {
-                ...state,
-                totalTime: action.payload.totalTime
-            };
         case Types.PRIMARY_COLOR:
             return {
                 ...state,
@@ -60,7 +43,6 @@ export default function timer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 sessionName: action.payload.sessionName,
-                sessionID: action.payload.sessionID
             };
         case Types.SESSIONID:
             return {
@@ -72,56 +54,16 @@ export default function timer(state = INITIAL_STATE, action) {
                 ...state,
                 orientation: action.payload.orientation
             };
-        case Types.ENDLINE:
-            return {
+        case Types.TOTAL:
+            return{
                 ...state,
-                endline: action.payload.endline
-            };
-        case Types.FORMAT:
-            let time = state.timeRemaining;
-
-            let minutes = Math.floor((time % (60 * 60)) / 60);
-            let seconds = Math.floor(time % 60);
-
-            if (seconds < 10) {
-                seconds = "0" + seconds;
+                totalTime: action.payload.totalTime,
             }
-            let format = minutes + ":" + seconds;
-
-            if (time === 0) {
-                clearInterval(state.timer);
+        case Types.REMAINING:
+            return{
+                ...state,
+                timeRemaining: action.payload.timeRemaining,
             }
-
-            return {
-                ...state,
-                timeFormated: format
-            };
-        case Types.CHECK_NOW:
-            return {
-                ...state,
-                now: Date.now()
-            };
-        case Types.CHECK_RUNNING:
-            return {
-                ...state,
-                isRunning: state.timeRemaining > 0 ? true : false
-            };
-        case Types.PAUSE_TIMER:
-            return {
-                ...state,
-                isPaused: true
-            };
-        case Types.RESUME_TIMER:
-            return {
-                ...state,
-                isPaused: false
-            };
-        case Types.UPDATE:
-            console.log(state.endline, state.now);
-            return {
-                ...state,
-                timeRemaining: Math.round((state.endline - state.now) / 1000)
-            };
 
         case Types.UPDATE_STYLE:
             let aboveHalfTime;
@@ -156,16 +98,17 @@ export const Creators = {
         type: Types.SESSION,
         payload: { sessionName }
     }),
+    setTotal: totalTime => ({
+        type: Types.TOTAL,
+        payload: { totalTime }
+    }),
+    setRemaining: timeRemaining => ({
+        type: Types.REMAINING,
+        payload: { timeRemaining }
+    }),
     setSessionID: sessionID => ({
         type: Types.SESSIONID,
         payload: { sessionID }
-    }),
-    is_Running: () => ({
-        type: Types.CHECK_RUNNING
-    }),
-    setTotalTime: totalTime => ({
-        type: Types.TOTAL,
-        payload: { totalTime }
     }),
     changePrimary: primaryColor => ({
         type: Types.PRIMARY_COLOR,
@@ -175,34 +118,14 @@ export const Creators = {
         type: Types.SECONDARY_COLOR,
         payload: { secondaryColor }
     }),
-    changeSession: sessionName => ({
-        type: Types.SESSION,
-        payload: { sessionName }
-    }),
     changeOrientation: orientation => ({
         type: Types.ORIENTATION,
         payload: { orientation }
     }),
-    setEndline: endline => ({
-        type: Types.ENDLINE,
-        payload: { endline }
-    }),
-    checkNow: () => ({
-        type: Types.CHECK_NOW
-    }),
-    format: () => ({
-        type: Types.FORMAT
-    }),
     updateStyle: () => ({
         type: Types.UPDATE_STYLE
     }),
-    update: () => ({
-        type: Types.UPDATE
+    updateTimeData: () => ({
+        type: Types.UPDATE_DATA
     }),
-    pauseTimer: () => ({
-        type: Types.PAUSE_TIMER
-    }),
-    resumeTimer: () => ({
-        type: Types.RESUME_TIMER
-    })
 };
