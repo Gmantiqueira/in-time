@@ -88,6 +88,9 @@ export const Container = styled.div`
                 font-size: 288px;
                 opacity: 0.2;
                 transition: 0.2s ease all;
+                @media screen and (max-width: 992px){
+                    font-size: 96px;
+                }
             }
             div {
                 button {
