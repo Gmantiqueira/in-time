@@ -8,6 +8,7 @@ const GlobalStyle = createGlobalStyle `
         url('../assets/fonts/CircularStd-Book.woff') format('woff'),
         url('../assets/fonts/CircularStd-Book.ttf') format('truetype'),
         url('../assets/fonts/CircularStd-Book.svg#bcc26993292869431e54c666aafa8fcd') format('svg');
+        font-display: swap;
         font-weight: 400;
         font-style: normal;
     }
