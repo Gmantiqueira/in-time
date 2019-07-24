@@ -58,7 +58,7 @@ export const Container = styled.div`
             background-color: rgba(255, 255, 255, 0.1);
         }
         .circular {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: ${props => props.secondaryColor};
             background-image: ${props =>
                 props.aboveHalfTime
                     ? `
@@ -115,6 +115,7 @@ export const Container = styled.div`
             line-height: 340px;
             text-align: center;
             letter-spacing: -0.02em;
+            pointer-events: none;
 
             color: #ffffff;
             transition: 0.2s ease all;
