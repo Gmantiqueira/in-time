@@ -11,18 +11,19 @@ import { NavWrapper } from "./styles";
 class Nav extends Component {
     render() {
         return (
-            <NavWrapper>
-                <Link to={"/" + this.props.timer.sessionName + "/user"}>
+            <NavWrapper
+                openProfile={this.props.openProfile}
+                closeProfile={this.props.closeProfile}
+            >
+                <div onClick={() => this.props.openProfile}>
                     <img src={UserIcon} alt="User" />
-                </Link>
-
-                <Link to={"/" + this.props.timer.sessionName}>
+                </div>
+                <div onClick={() => this.props.closeProfile}>
                     <img src={StopwatchIcon} alt="Stopwatch" />
-                </Link>
-
-                <Link to={"/" + this.props.timer.sessionName + "/user"}>
+                </div>
+                <div onClick={() => this.props.openProfile}>
                     <img src={UserIcon} alt="User" />
-                </Link>
+                </div>
             </NavWrapper>
         );
     }
