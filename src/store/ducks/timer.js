@@ -1,6 +1,5 @@
 export const Types = {
     SESSION: "timer/SESSION",
-    SESSIONID: "timer/SESSIONID",
 
     PRIMARY_COLOR: "timer/PRIMARY_COLOR",
     SECONDARY_COLOR: "timer/SECONDARY_COLOR",
@@ -23,8 +22,7 @@ const INITIAL_STATE = {
     secondaryColor: "hsl(217, 20%, 20%)",
     orientation: "circular",
 
-    sessionName: "",
-    sessionID: ""
+    session: [],
 };
 
 export default function timer(state = INITIAL_STATE, action) {
@@ -42,12 +40,7 @@ export default function timer(state = INITIAL_STATE, action) {
         case Types.SESSION:
             return {
                 ...state,
-                sessionName: action.payload.sessionName,
-            };
-        case Types.SESSIONID:
-            return {
-                ...state,
-                sessionID: action.payload.sessionID
+                session: action.payload.session,
             };
         case Types.ORIENTATION:
             return {
@@ -94,9 +87,9 @@ export default function timer(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
-    setSession: sessionName => ({
+    setSession: session => ({
         type: Types.SESSION,
-        payload: { sessionName }
+        payload: { session }
     }),
     setTotal: totalTime => ({
         type: Types.TOTAL,
@@ -105,10 +98,6 @@ export const Creators = {
     setRemaining: timeRemaining => ({
         type: Types.REMAINING,
         payload: { timeRemaining }
-    }),
-    setSessionID: sessionID => ({
-        type: Types.SESSIONID,
-        payload: { sessionID }
     }),
     changePrimary: primaryColor => ({
         type: Types.PRIMARY_COLOR,
