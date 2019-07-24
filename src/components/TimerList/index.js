@@ -41,8 +41,6 @@ class TimerList extends Component {
             let value = previousTimerlist.filter(x => !timerList.includes(x));
             value = String(value[0])
 
-            console.log(value)
-
             let timers = document.getElementsByClassName("timer-btn");
 
             for (let i = 0; i < timers.length; i++) {
@@ -67,7 +65,7 @@ class TimerList extends Component {
 
         await api.post(
             "/session/" +
-                this.props.timer.sessionID +
+                this.props.timer.session._id +
                 "/timerlist/" +
                 this.state.timerInput
         );
@@ -82,7 +80,7 @@ class TimerList extends Component {
         await this.setState({valueDeleted: e.target.value}) ;
 
         await api.delete(
-            "/session/" + this.props.timer.sessionID + "/timerlist/" + e.target.value
+            "/session/" + this.props.timer.session._id + "/timerlist/" + e.target.value
         );
     };
 
