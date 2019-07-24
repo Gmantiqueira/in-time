@@ -12,7 +12,7 @@ import { Container } from "./styles";
 class Timer extends Component {
     state = {
         timer: [],
-        timeFormated: '',
+        timeFormated: ''
     };
 
     intervalID = 0
@@ -25,50 +25,67 @@ class Timer extends Component {
         });
         socket.on("stopTimer" , (timer) => {
             clearInterval(this.intervalID)
+            for (var i = 1; i < this.intervalID; i++){
+                window.clearInterval(i);
+            }
         });
     };
 
-    componentDidMount() {
+    componentWillMount() {
         this.registerToSocket()
         this.startTimer();
     }
 
     componentWillUnmount() {
         clearInterval(this.intervalID);
+        for (var i = 1; i < this.intervalID; i++){
+            window.clearInterval(i);
+        }
     }
 
-    startTimer = () => {
-        this.intervalID = setInterval(async e => {
-            if (this.props.timerInfo.isPaused || !this.props.timerInfo.isRunning) {
+    startTimer = async e => {
+
+        this.intervalID = await window.setInterval(async e => {
+            var endline = moment(this.props.timer.session.endline);
+            var difference = moment(endline).diff(moment.utc().local().format())
+            var timeRemaining = Math.floor(difference / 1000)
+
+            this.props.setTotal(this.props.timer.session.totalTime * 60);
+            this.props.setRemaining(timeRemaining);
+            this.props.updateStyle();
+
+            let time = timeRemaining;
+
+            let minutes = Math.floor((time % (60 * 60)) / 60);
+            let seconds = Math.floor(time % 60);
+
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            let format = minutes + ":" + seconds;
+
+            if(time === 0){
+                format = ''
+            }
+
+            console.log(this.props.timer.session.endline)
+
+            this.setState({timeFormated: format})
+
+            if(time <= 0){
+                await api.put(
+                    "/session/" + this.props.timer.session._id + "/stop",
+                );
                 clearInterval(this.intervalID);
-            } else {
-                var endline = moment(this.props.timerInfo.endline);
-
-                var difference = moment(endline).diff(moment.utc().local().format())
-
-                var timeRemaining = Math.floor(difference / 1000)
-
-                this.props.setTotal(this.props.timerInfo.totalTime * 60);
-                this.props.setRemaining(timeRemaining);
-                this.props.updateStyle();
-
-                let time = timeRemaining;
-
-                let minutes = Math.floor((time % (60 * 60)) / 60);
-                let seconds = Math.floor(time % 60);
-
-                if (seconds < 10) {
-                    seconds = "0" + seconds;
+                for (var i = 1; i < this.intervalID; i++){
+                    window.clearInterval(i);
                 }
-                let format = minutes + ":" + seconds;
+            }
 
-                this.setState({timeFormated: format})
-
-                if(time <= 0){
-                    await api.put(
-                        "/session/" + this.props.timer.sessionID + "/update",
-                    );
-                    await clearInterval(this.intervalID);
+            if(this.props.timer.session.isPaused || !this.props.timer.session.isRunning){
+                clearInterval(this.intervalID)
+                for (var i = 1; i < this.intervalID; i++){
+                    window.clearInterval(i);
                 }
             }
         }, 100);
@@ -76,39 +93,50 @@ class Timer extends Component {
 
     pauseResumeTimer = async e => {
         e.preventDefault();
-        if (!this.props.timerInfo.isPaused) {
+
+        var elem = document.getElementsByClassName('timer')
+
+        if (this.props.timer.session.isPaused === false) {
             await api.put(
                 "/session/" +
-                    this.props.timer.sessionID +
+                    this.props.timer.session._id +
                     "/pause"
             );
+            if(elem[0]){
+                elem[0].classList.add("paused");
+            }
         } else {
             await api.put(
                 "/session/" +
-                    this.props.timer.sessionID +
+                    this.props.timer.session._id +
                     "/resume"
             );
+            if(elem[0]){
+                elem[0].classList.remove("paused");
+            }
 
             this.startTimer();
         }
     };
 
-    stopTimer = e => {
+    stopTimer = async e => {
         e.preventDefault();
+        e.persist();
 
-        // this.props.setTotalTime(0);
-        // this.props.setEndline(Date.now);
+        clearInterval(this.intervalID)
+        for (var i = 1; i < this.intervalID; i++){
+            window.clearInterval(i);
+        }
 
-        // this.props.is_Running();
-        this.setState({timeRemaining: Math.round((this.props.timer.endline - Date.now) / 1000)})
-        this.props.updateStyle();
-        clearInterval(this.props.timer.timer);
+        await api.put(
+            "/session/" + this.props.timer.session._id + "/stop",
+        );
     };
 
     render() {
         return (
             <Container
-                className="timer"
+                className={'timer ' + this.props.paused}
                 onClick={this.pauseResumeTimer}
                 circleSection={this.props.timer.circleSection}
                 barProgress={this.props.timer.barProgress}

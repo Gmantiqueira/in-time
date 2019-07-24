@@ -8,39 +8,50 @@ import { Creators as TimerActions } from "../../store/ducks/timer";
 
 import { Container } from "./styles";
 import Timer from "../../components/Timer";
+import User from "../../components/User";
 import TimerList from "../../components/TimerList";
 import Nav from "../../components/Nav";
 
 class Session extends Component {
     state = {
+        timerList: [],
         timer: [],
-        timerList: []
+        paused: '',
+        userProfileOpen: true
     };
 
     intervalID = 0
 
     infoGet = async e => {
-        await this.props.setSession(this.props.location.pathname.split("/")[1]);
-
-        const { data: timer } = await api.get(
-            "/session/" + this.props.timer.sessionName
-        );
-
-        await this.props.setSessionID(timer._id);
-
-        if(timer.isPaused){
-            await api.put(
-                "/session/" +
-                    this.props.timer.sessionID +
-                    "/resume"
-            );
-        }
-
-        await this.setState({
-            timer: timer
+        await api.get(
+            "/session/" + this.props.location.pathname.split("/")[1]
+        ).then(response => {
+            this.props.setSession(response.data);
+            this.props.updateStyle();
+            if(response.data.isPaused){
+                this.setState({paused: 'paused'});
+            } else {
+                this.setState({paused: ''});
+            }
         });
 
     };
+
+    openProfile = () => {
+        this.setState({userProfileOpen: true})
+    }
+
+    closeProfile = () => {
+        this.setState({userProfileOpen: false})
+    }
+
+    renderProfile = () => {
+        var Profile = <User/>;
+        console.log(Profile)
+        if(!this.state.userProfileOpen){
+            return Profile
+        }
+    }
 
     registerToSocket = () => {
         const socket = io("http://localhost:3000");
@@ -51,60 +62,69 @@ class Session extends Component {
 
         socket.on("pauseTimer" , async (timer) => {
             var elem = document.getElementsByClassName('timer')
-            await this.setState({ timer: timer });
+
+            this.setState({paused: 'paused'});
+
             if(elem[0]){
                 elem[0].classList.add("paused");
             }
+
+            await this.props.setSession(timer);
         });
 
         socket.on("resumeTimer" , async (timer) => {
             var elem = document.getElementsByClassName('timer')
-            await this.setState({ timer: timer });
+
+            this.setState({paused: ''});
+
             if(elem[0]){
                 elem[0].classList.remove("paused");
             }
+
+            await this.props.setSession(timer);
         });
 
         socket.on("updateTimer" , async (timer) => {
-            this.setState({ timer: timer });
+            await this.props.setSession(timer);
         });
 
         socket.on("stopTimer" , async (timer) => {
-            this.setState({ timer: timer });
+            await this.props.setSession(timer);
         });
     };
 
     componentWillMount() {
-        this.registerToSocket()
         this.infoGet();
+        this.registerToSocket()
     }
 
     handleStartTimer = async e => {
         e.persist()
 
-        await api.put(
-            "/session/" + this.props.timer.sessionID + "/set", {
+        api.put(
+            "/session/" + this.props.timer.session._id + "/set", {
                 "totalTime": e.target.value
             }
-        );
+        )
 
-        this.props.updateStyle();
+        this.infoGet()
     };
 
     render() {
-        return this.state.timer.isRunning === false ? (
+        return this.props.timer.session.isRunning === false ? (
             <Container secondaryColor={this.props.timer.secondaryColor}>
                 <TimerList
                     location={this.props.location}
                     startTimer={this.handleStartTimer}
-                    timerList={this.state.timer}
+                    timerList={this.props.timer.session}
                 />
-                <Nav location={this.props.location} />
+                <Nav openProfile={this.openProfile} closeProfile={this.closeProfile} location={this.props.location} />
+                <User/>
             </Container>
         ) : (
             <Container>
-                <Timer location={this.props.location} timerInfo={this.state.timer} />
-                <Nav location={this.props.location} />
+                <Timer paused={this.state.paused} location={this.props.location} />
+                <Nav openProfile={this.openProfile} closeProfile={this.closeProfile} location={this.props.location} />
             </Container>
         );
     }
