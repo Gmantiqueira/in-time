@@ -19,8 +19,10 @@ class TimerList extends Component {
 
     getTimerlist = async e => {
         const { data: timer } = await api.get(
-            "/session/" + this.props.timer.sessionName
+            "/session/" + this.props.timer.session.sessionName
         );
+
+        console.log(this.props.timer)
 
         await this.setState({
             timerList: timer.timerList
@@ -28,7 +30,16 @@ class TimerList extends Component {
     };
 
     registerToSocket = () => {
-        const socket = io("http://localhost:3000");
+        var apiUrl;
+
+        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+            // apiUrl = 'http://localhost:3000'
+            apiUrl = 'https://in-time-api.herokuapp.com'
+        } else {
+            apiUrl = 'https://in-time-api.herokuapp.com'
+        }
+
+        const socket = io(apiUrl);
 
         socket.on("addTimer", timerList => {
             this.setState({ timerList: timerList });

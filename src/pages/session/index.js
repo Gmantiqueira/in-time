@@ -54,10 +54,20 @@ class Session extends Component {
     }
 
     registerToSocket = () => {
-        const socket = io("http://localhost:3000");
+        var apiUrl;
+
+        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+            // apiUrl = 'http://localhost:3000'
+            apiUrl = 'https://in-time-api.herokuapp.com'
+        } else {
+            apiUrl = 'https://in-time-api.herokuapp.com'
+        }
+
+        const socket = io(apiUrl);
 
         socket.on("setTimer" , async (timer) => {
-            await this.setState({ timer: timer });
+            this.setState({ timer: timer });
+            this.infoGet();
         });
 
         socket.on("pauseTimer" , async (timer) => {
