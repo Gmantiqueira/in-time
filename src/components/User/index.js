@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -7,16 +6,11 @@ import { Creators as TimerActions } from "../../store/ducks/timer";
 
 import { Container, Profile, FormList, FormRow } from "./styles";
 
-import Nav from "../../components/Nav";
+import Nav from "../Nav";
 
 import Photo from "../../assets/images/photo.jpg";
 
 class User extends Component {
-
-    componentDidMount() {
-        console.log(this)
-        this.props.setSession(this.props.location.pathname.split("/")[1]);
-    }
 
     toSecondaryColor = hex => {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
