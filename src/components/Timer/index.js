@@ -77,14 +77,14 @@ class Timer extends Component {
                     "/session/" + this.props.timer.session._id + "/stop",
                 );
                 clearInterval(this.intervalID);
-                for (var i = 1; i < this.intervalID; i++){
+                for (let i = 1; i < this.intervalID; i++){
                     window.clearInterval(i);
                 }
             }
 
             if(this.props.timer.session.isPaused || !this.props.timer.session.isRunning){
                 clearInterval(this.intervalID)
-                for (var i = 1; i < this.intervalID; i++){
+                for (let i = 1; i < this.intervalID; i++){
                     window.clearInterval(i);
                 }
             }
