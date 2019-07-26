@@ -22,8 +22,6 @@ class TimerList extends Component {
             "/session/" + this.props.timer.session.sessionName
         );
 
-        console.log(this.props.timer)
-
         await this.setState({
             timerList: timer.timerList
         });

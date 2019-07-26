@@ -77,8 +77,6 @@ class Timer extends Component {
                 format = ''
             }
 
-            console.log(this.props.timer.session.endline)
-
             this.setState({timeFormated: format})
 
             if(time <= 0){
