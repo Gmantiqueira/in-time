@@ -8,19 +8,19 @@ import StopwatchIcon from "../../assets/images/stopwatch.png";
 import { NavWrapper } from "./styles";
 
 class Nav extends Component {
+    openProfile = this.props.openProfile;
+    closeProfile = this.props.closeProfile;
+
     render() {
         return (
-            <NavWrapper
-                openProfile={this.props.openProfile}
-                closeProfile={this.props.closeProfile}
-            >
-                <div onClick={() => this.props.openProfile}>
+            <NavWrapper>
+                <div onClick={this.openProfile}>
                     <img src={UserIcon} alt="User" />
                 </div>
-                <div onClick={() => this.props.closeProfile}>
+                <div onClick={this.closeProfile}>
                     <img src={StopwatchIcon} alt="Stopwatch" />
                 </div>
-                <div onClick={() => this.props.openProfile}>
+                <div onClick={this.openProfile}>
                     <img src={UserIcon} alt="User" />
                 </div>
             </NavWrapper>

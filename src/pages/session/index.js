@@ -17,7 +17,7 @@ class Session extends Component {
         timerList: [],
         timer: [],
         paused: '',
-        userProfileOpen: true
+        profileOpen: false
     };
 
     intervalID = 0
@@ -38,19 +38,13 @@ class Session extends Component {
     };
 
     openProfile = () => {
-        this.setState({userProfileOpen: true})
+        this.setState({profileOpen: true})
+        console.log(this.state.profileOpen);
     }
 
     closeProfile = () => {
-        this.setState({userProfileOpen: false})
-    }
-
-    renderProfile = () => {
-        var Profile = <User/>;
-        console.log(Profile)
-        if(!this.state.userProfileOpen){
-            return Profile
-        }
+        this.setState({profileOpen: false})
+        console.log(this.state.profileOpen);
     }
 
     registerToSocket = () => {
@@ -129,12 +123,13 @@ class Session extends Component {
                     timerList={this.props.timer.session}
                 />
                 <Nav openProfile={this.openProfile} closeProfile={this.closeProfile} location={this.props.location} />
-                <User/>
+                <User open={this.state.profileOpen}/>
             </Container>
         ) : (
             <Container>
                 <Timer paused={this.state.paused} location={this.props.location} />
                 <Nav openProfile={this.openProfile} closeProfile={this.closeProfile} location={this.props.location} />
+                <User open={this.state.profileOpen}/>
             </Container>
         );
     }

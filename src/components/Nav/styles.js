@@ -7,6 +7,8 @@ export const NavWrapper = styled.div`
     bottom: 16px;
     left: calc(50% - 72px);
 
+    z-index: 10;
+
     div {
         cursor: pointer;
         margin-left: 24px;
