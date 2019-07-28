@@ -46,6 +46,8 @@ class Timer extends Component {
     startTimer = async e => {
 
         this.intervalID = await window.setInterval(async e => {
+            moment.locale('pt-BR')
+
             var endline = moment(this.props.timer.session.endline);
             var difference = moment(endline).diff(moment.utc().local().format())
             var timeRemaining = Math.floor(difference / 1000)
