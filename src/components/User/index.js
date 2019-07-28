@@ -75,15 +75,13 @@ class User extends Component {
     };
 
     componentWillUnmount() {
-        // this.props.checkNow();
-        // this.props.update();
         this.props.updateStyle();
-        // this.props.format();
     }
 
     render() {
         return (
             <Container
+                isOpen={this.props.open}
                 primaryColor={this.props.timer.primaryColor}
                 secondaryColor={this.props.timer.secondaryColor}
             >
@@ -154,8 +152,6 @@ class User extends Component {
                         <input type="checkbox" />
                     </FormRow>
                 </FormList>
-
-                <Nav location={this.props.location} />
             </Container>
         );
     }

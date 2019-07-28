@@ -12,6 +12,16 @@ export const Container = styled.div`
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
+
+    opacity: ${props => props.isOpen ? "1" : "0"};
+    pointer-events: ${props => props.isOpen ? "auto" : "none"};
+    z-index: 5;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    transition: .2s ease opacity;
 `;
 
 export const Profile = styled.div`

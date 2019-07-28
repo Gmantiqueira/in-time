@@ -3,7 +3,8 @@ import axios from "axios";
 var apiUrl;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    apiUrl = 'http://localhost:3000'
+    // apiUrl = 'http://localhost:3000'
+    apiUrl = 'https://in-time-api.herokuapp.com'
 } else {
     apiUrl = 'https://in-time-api.herokuapp.com'
 }
