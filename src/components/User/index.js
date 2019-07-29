@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import api from "../../services/api";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -6,60 +7,20 @@ import { Creators as TimerActions } from "../../store/ducks/timer";
 
 import { Container, Profile, FormList, FormRow } from "./styles";
 
-import Nav from "../Nav";
-
 import Photo from "../../assets/images/photo.jpg";
 
 class User extends Component {
 
-    toSecondaryColor = hex => {
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-
-        var r = parseInt(result[1], 16);
-        var g = parseInt(result[2], 16);
-        var b = parseInt(result[3], 16);
-
-        var max = Math.max(r, g, b),
-            min = Math.min(r, g, b);
-
-        var h = (max + min) / 2;
-
-        if (max === min) {
-            h = 0; // achromatic
-        } else {
-            var d = max - min;
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-                default:
-                    return false;
-            }
-            h /= 6;
-        }
-
-        h = Math.round(360 * h);
-
-        var colorInHSL = "hsl(" + h + ", 20%, 20%)";
-
-        return colorInHSL;
-    };
-
     handleColorConfig = e => {
         e.preventDefault();
 
-        this.props.changePrimary(e.target.value);
-        this.props.changeSecondary(this.toSecondaryColor(e.target.value));
+        api.put(
+            "/session/" + this.props.timer.session._id + "/color", {
+                "baseColor": e.target.value
+            }
+        )
 
-        let primary = e.target.value;
-
-        document.getElementById("colorWrapper").style.backgroundColor = primary;
+        document.getElementById("colorWrapper").style.backgroundColor = e.target.value;
     };
 
     handleSessionConfig = e => {
@@ -71,7 +32,11 @@ class User extends Component {
     handleOrientationConfig = e => {
         e.preventDefault();
 
-        this.props.changeOrientation(e.target.value);
+        api.put(
+            "/session/" + this.props.timer.session._id + "/orientation", {
+                "orientation": e.target.value
+            }
+        )
     };
 
     componentWillUnmount() {
@@ -100,7 +65,7 @@ class User extends Component {
                             <input
                                 id="color"
                                 type="color"
-                                value={this.props.timer.primaryColor}
+                                value=''
                                 onChange={this.handleColorConfig}
                             />
                         </div>

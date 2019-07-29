@@ -53,51 +53,53 @@ class Timer extends Component {
     }
 
     startTimer = async e => {
+        if (this.props.canExec){
+            this.intervalID = await window.setInterval(async e => {
+                moment.locale('pt-BR')
 
-        this.intervalID = await window.setInterval(async e => {
-            moment.locale('pt-BR')
+                var endline = this.props.timer.session.endline;
+                console.log(endline)
+                var difference = moment(endline).diff(moment.utc().local().format())
+                var timeRemaining = Math.floor(difference / 1000)
 
-            var endline = moment(this.props.timer.session.endline);
-            var difference = moment(endline).diff(moment.utc().local().format())
-            var timeRemaining = Math.floor(difference / 1000)
+                this.props.setTotal(this.props.timer.session.totalTime * 60);
+                this.props.setRemaining(timeRemaining);
+                this.props.updateStyle();
 
-            this.props.setTotal(this.props.timer.session.totalTime * 60);
-            this.props.setRemaining(timeRemaining);
-            this.props.updateStyle();
+                let time = timeRemaining;
 
-            let time = timeRemaining;
+                let minutes = Math.floor((time % (60 * 60)) / 60);
+                let seconds = Math.floor(time % 60);
 
-            let minutes = Math.floor((time % (60 * 60)) / 60);
-            let seconds = Math.floor(time % 60);
-
-            if (seconds < 10) {
-                seconds = "0" + seconds;
-            }
-            let format = minutes + ":" + seconds;
-
-            if(time === 0){
-                format = ''
-            }
-
-            this.setState({timeFormated: format})
-
-            if(time <= 0){
-                await api.put(
-                    "/session/" + this.props.timer.session._id + "/stop",
-                );
-                clearInterval(this.intervalID);
-                for (let i = 1; i < this.intervalID; i++){
-                    window.clearInterval(i);
+                if (seconds < 10) {
+                    seconds = "0" + seconds;
                 }
-            }
+                let format = minutes + ":" + seconds;
 
-            if(this.props.timer.session.isPaused || !this.props.timer.session.isRunning){
-                clearInterval(this.intervalID)
-                for (let i = 1; i < this.intervalID; i++){
-                    window.clearInterval(i);
+                if(time === 0){
+                    format = ''
                 }
-            }
-        }, 100);
+
+                this.setState({timeFormated: format})
+
+                if(time <= 0){
+                    await api.put(
+                        "/session/" + this.props.timer.session._id + "/stop",
+                    );
+                    clearInterval(this.intervalID);
+                    for (let i = 1; i < this.intervalID; i++){
+                        window.clearInterval(i);
+                    }
+                }
+
+                if(this.props.timer.session.isPaused || !this.props.timer.session.isRunning){
+                    clearInterval(this.intervalID)
+                    for (let i = 1; i < this.intervalID; i++){
+                        window.clearInterval(i);
+                    }
+                }
+            }, 100);
+        }
     };
 
     pauseResumeTimer = async e => {

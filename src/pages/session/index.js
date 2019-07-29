@@ -17,17 +17,62 @@ class Session extends Component {
         timerList: [],
         timer: [],
         paused: '',
-        profileOpen: false
+        profileOpen: false,
+        canExec: false
     };
 
     intervalID = 0
+
+    toSecondaryColor = hex => {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+        var r = parseInt(result[1], 16);
+        var g = parseInt(result[2], 16);
+        var b = parseInt(result[3], 16);
+
+        var max = Math.max(r, g, b),
+            min = Math.min(r, g, b);
+
+        var h = (max + min) / 2;
+
+        if (max === min) {
+            h = 0; // achromatic
+        } else {
+            var d = max - min;
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+                default:
+                    return false;
+            }
+            h /= 6;
+        }
+
+        h = Math.round(360 * h);
+
+        var colorInHSL = "hsl(" + h + ", 20%, 20%)";
+
+        return colorInHSL;
+    };
 
     infoGet = async e => {
         await api.get(
             "/session/" + this.props.location.pathname.split("/")[1]
         ).then(response => {
             this.props.setSession(response.data);
-            this.props.updateStyle();
+
+            this.props.changePrimary(response.data.baseColor);
+            this.props.changeSecondary(this.toSecondaryColor(response.data.baseColor));
+            this.props.changeOrientation(response.data.orientation);
+
+            this.setState({canExec: true})
             if(response.data.isPaused){
                 this.setState({paused: 'paused'});
             } else {
@@ -39,12 +84,10 @@ class Session extends Component {
 
     openProfile = () => {
         this.setState({profileOpen: true})
-        console.log(this.state.profileOpen);
     }
 
     closeProfile = () => {
         this.setState({profileOpen: false})
-        console.log(this.state.profileOpen);
     }
 
     registerToSocket = () => {
@@ -95,6 +138,19 @@ class Session extends Component {
         socket.on("stopTimer" , async (timer) => {
             await this.props.setSession(timer);
         });
+
+        socket.on("updateColor" , async (timer) => {
+            await this.props.setSession(timer);
+
+            this.props.changePrimary(timer.baseColor);
+            this.props.changeSecondary(this.toSecondaryColor(timer.baseColor));
+        });
+
+        socket.on('updateOrientation', async (timer) => {
+            await this.props.setSession(timer);
+
+            this.props.changeOrientation(timer.orientation);
+        })
     };
 
     componentWillMount() {
@@ -127,7 +183,7 @@ class Session extends Component {
             </Container>
         ) : (
             <Container>
-                <Timer paused={this.state.paused} location={this.props.location} />
+                <Timer canExec={this.state.canExec} paused={this.state.paused} location={this.props.location} />
                 <Nav openProfile={this.openProfile} closeProfile={this.closeProfile} location={this.props.location} />
                 <User open={this.state.profileOpen}/>
             </Container>
