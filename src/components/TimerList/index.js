@@ -40,7 +40,7 @@ class TimerList extends Component {
         socket.on("removeTimer", async (timerList) => {
             var previousTimerlist = this.state.timerList
 
-            let value = previousTimerlist.filter(x => !timerList.includes(x));
+            let value = previousTimerlist.filter(deleted => !timerList.includes(deleted));
             value = String(value[0])
 
             let timers = document.getElementsByClassName("timer-btn");
