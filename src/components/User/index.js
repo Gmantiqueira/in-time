@@ -4,12 +4,27 @@ import api from "../../services/api";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Creators as TimerActions } from "../../store/ducks/timer";
+import { Creators as UserActions } from "../../store/ducks/user";
 
 import { Container, Profile, FormList, FormRow } from "./styles";
 
 import Photo from "../../assets/images/photo.jpg";
 
 class User extends Component {
+
+    state = {
+        name: 'Guest',
+        email: 'Insira seu e-mail aqui!',
+        gravatar: 'https://www.pinclipart.com/picdir/middle/181-1814767_person-svg-png-icon-free-download-profile-icon.png'
+    }
+
+    handleEmailInput = e => {
+        this.setState({email: e.target.value})
+    }
+
+    handleNameInput = e => {
+        this.setState({name: e.target.value})
+    }
 
     handleColorConfig = e => {
         e.preventDefault();
@@ -25,8 +40,6 @@ class User extends Component {
 
     handleSessionConfig = e => {
         e.preventDefault();
-
-        this.props.changeSession(e.target.value);
     };
 
     handleOrientationConfig = e => {
@@ -52,10 +65,15 @@ class User extends Component {
             >
                 <Profile>
                     <div>
-                        <img src={Photo} alt="Profile" />
+                        <img src={this.state.gravatar} alt="Profile" />
                     </div>
-                    <input id="username" value={"Gmantiqueira"/* this.props.user.email */} type="text"/>
-                    <input id="usermail" value={"gmantiqueira@gmail.com"/* this.props.user.email */} type="text"/>
+                    <form onSubmit={() => this.saveUsername}>
+                        <input placeholder="Nome" onClick={() => {this.setState({name: ''})}} onChange={this.handleNameInput} id="username" value={this.state.name/* this.props.user.name */} type="text"/>
+                    </form>
+
+                    <form onSubmit={() => this.saveEmail}>
+                        <input placeholder="Email" onClick={() => {this.setState({email: ''})}} onChange={this.handleEmailInput} id="usermail" value={this.state.email/* this.props.user.email */} type="text"/>
+                    </form>
                 </Profile>
 
                 <FormList>
@@ -123,11 +141,12 @@ class User extends Component {
 }
 
 const mapStateToProps = state => ({
-    timer: state.timer
+    timer: state.timer,
+    user: state.user
 });
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(TimerActions, dispatch);
+    bindActionCreators(UserActions, dispatch);
 
 export default connect(
     mapStateToProps,
