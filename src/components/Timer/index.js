@@ -55,10 +55,8 @@ class Timer extends Component {
     startTimer = async e => {
         if (this.props.canExec){
             this.intervalID = await window.setInterval(async e => {
-                moment.locale('pt-BR')
 
                 var endline = this.props.timer.session.endline;
-                console.log(endline)
                 var difference = moment(endline).diff(moment.utc().local().format())
                 var timeRemaining = Math.floor(difference / 1000)
 
@@ -112,21 +110,23 @@ class Timer extends Component {
                 "/session/" +
                     this.props.timer.session._id +
                     "/pause"
-            );
-            if(elem[0]){
-                elem[0].classList.add("paused");
-            }
+            ).then(response => {
+                if(elem[0]){
+                    elem[0].classList.add("paused");
+                }
+            });
         } else {
             await api.put(
                 "/session/" +
                     this.props.timer.session._id +
                     "/resume"
-            );
-            if(elem[0]){
-                elem[0].classList.remove("paused");
-            }
+            ).then(response => {
+                if(elem[0]){
+                    elem[0].classList.remove("paused");
+                }
 
-            this.startTimer();
+                this.startTimer();
+            });
         }
     };
 

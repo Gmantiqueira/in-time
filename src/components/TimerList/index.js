@@ -28,14 +28,7 @@ class TimerList extends Component {
     };
 
     registerToSocket = () => {
-        var apiUrl;
-
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // apiUrl = 'http://localhost:3000'
-            apiUrl = 'https://in-time-api.herokuapp.com'
-        } else {
-            apiUrl = 'https://in-time-api.herokuapp.com'
-        }
+        var apiUrl = 'https://in-time-api.herokuapp.com'
 
         const socket = io(apiUrl);
 
@@ -64,7 +57,7 @@ class TimerList extends Component {
         });
     };
 
-    componentDidMount() {
+    componentWillMount() {
         this.registerToSocket();
         this.getTimerlist();
     }
@@ -86,7 +79,7 @@ class TimerList extends Component {
         e.preventDefault();
         e.persist()
 
-        await this.setState({valueDeleted: e.target.value}) ;
+        this.setState({valueDeleted: e.target.value}) ;
 
         await api.delete(
             "/session/" + this.props.timer.session._id + "/timerlist/" + e.target.value
