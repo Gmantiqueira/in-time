@@ -54,8 +54,8 @@ class User extends Component {
                     <div>
                         <img src={Photo} alt="Profile" />
                     </div>
-                    <h4>Gmantiqueira</h4>
-                    <p>gmantiqueira@gmail.com</p>
+                    <input id="username" value={"Gmantiqueira"/* this.props.user.email */} type="text"/>
+                    <input id="usermail" value={"gmantiqueira@gmail.com"/* this.props.user.email */} type="text"/>
                 </Profile>
 
                 <FormList>
@@ -72,11 +72,11 @@ class User extends Component {
                     </FormRow>
 
                     <FormRow>
-                        <label>in.time/</label>
+                        <label>{window.location.host}/</label>
 
                         <input
                             type="text"
-                            value={this.props.timer.sessionName}
+                            value={this.props.timer.session.sessionName}
                             onChange={this.handleSessionConfig}
                         />
                     </FormRow>

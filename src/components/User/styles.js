@@ -29,6 +29,23 @@ export const Profile = styled.div`
     flex-direction: column;
     align-items: center;
 
+    input {
+        background-color: transparent;
+        border: 0;
+        box-shadow: none;
+        color: #FFF;
+        font-weight: 450;
+        font-size: 20px;
+        line-height: 29px;
+        margin-top: 8px;
+        outline: 0;
+        text-align: center;
+        text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
+        &#usermail{
+            font-size: 16px;
+        }
+    }
+
     div {
         overflow: hidden;
 
@@ -43,21 +60,6 @@ export const Profile = styled.div`
     img {
         height: auto;
         width: 100%;
-    }
-
-    h4,
-    p {
-        font-weight: 450;
-        font-size: 20px;
-        line-height: 29px;
-        text-align: center;
-        text-shadow: 0px 5px 24px rgba(84, 98, 124, 0.15);
-    }
-
-    p {
-        font-size: 14px;
-
-        margin-top: 8px;
     }
 `;
 
