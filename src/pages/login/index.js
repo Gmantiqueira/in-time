@@ -38,7 +38,7 @@ class Login extends Component {
                     primaryColor={this.props.timer.primaryColor}
                     onSubmit={this.handleSubmit}
                 >
-                    <label>Insira seu nome de usuário</label>
+                    <label>Insira o nome da sessão</label>
                     <input
                         type="text"
                         value={this.state.session}

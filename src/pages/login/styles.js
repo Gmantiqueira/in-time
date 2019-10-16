@@ -36,6 +36,7 @@ export const Form = styled.form`
     background: ${props => props.primaryColor};
     border-radius: 8px;
     padding: 16px 8px;
+    text-align: center;
 
     label {
         margin-bottom: 16px;
